@@ -117,30 +117,48 @@ class Dashboard extends DashboardComponent {
         overflow: hidden;
         display: flex;
         flex-direction: column;
+        min-height: 0;
+      }
+
+      .weather-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr;
+        gap: 30px;
+      }
+
+      .weather-container > .section-title {
+        grid-column: 1 / -1;
+      }
+
+      weather-current {
+        grid-column: 1;
+        grid-row: 2;
+        overflow-y: auto;
+      }
+
+      weather-forecast {
+        grid-column: 2;
+        grid-row: 2;
+        overflow-y: auto;
       }
 
       .calendar-container {
         border-color: var(--accent-lavender);
         background: rgba(114, 135, 253, 0.05);
+        min-height: 0;
       }
 
       .tasks-container {
         border-color: var(--accent-teal);
         background: rgba(23, 146, 153, 0.05);
+        min-height: 0;
       }
 
       .infrastructure-container {
         border-color: var(--accent-lavender);
         background: rgba(114, 135, 253, 0.05);
-      }
-
-      weather-current {
-        margin-bottom: 20px;
-      }
-
-      weather-forecast {
-        flex: 1;
-        overflow-y: auto;
+        min-height: 0;
       }
 
       #calendar-content,

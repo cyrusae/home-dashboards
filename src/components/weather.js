@@ -11,7 +11,7 @@ class WeatherCurrent extends DashboardComponent {
   }
 
   connectedCallback() {
-    this.showLoading();
+    this.renderInitial();
     this.fetchWeather();
     // Refresh every 10 minutes
     this.updateInterval = setInterval(() => this.fetchWeather(), 600000);
@@ -21,6 +21,20 @@ class WeatherCurrent extends DashboardComponent {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
     }
+  }
+
+  renderInitial() {
+    const html = `<div class="weather-left"><div style="color: var(--text-light); font-style: italic;">Loading weather...</div></div>`;
+    const styles = `
+      .weather-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 20px;
+      }
+    `;
+    this.setContent(html, styles);
   }
 
   async fetchWeather() {
@@ -177,7 +191,7 @@ class WeatherForecast extends DashboardComponent {
   }
 
   connectedCallback() {
-    this.showLoading();
+    this.renderInitial();
     this.fetchForecast();
     this.updateInterval = setInterval(() => this.fetchForecast(), 900000); // 15 min
   }
@@ -186,6 +200,16 @@ class WeatherForecast extends DashboardComponent {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
     }
+  }
+
+  renderInitial() {
+    const html = `<div class="loading" style="color: var(--text-light); font-style: italic;">Loading forecast...</div>`;
+    const styles = `
+      .loading {
+        padding: 20px;
+      }
+    `;
+    this.setContent(html, styles);
   }
 
   async fetchForecast() {

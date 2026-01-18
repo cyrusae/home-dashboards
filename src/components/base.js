@@ -69,6 +69,8 @@ export class DashboardComponent extends HTMLElement {
       ${html}
     `;
 
+    // Clear existing shadow DOM first
+    this.shadowRoot.innerHTML = '';
     this.shadowRoot.appendChild(template.content.cloneNode(true));
   }
 
