@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dawnfire Dashboard</title>
+    <link rel="stylesheet" href="src/styles/theme.css">
+</head>
+<body>
+    <div id="app">
+        <div style="
+            padding: 40px;
+            font-size: 24px;
+            text-align: center;
+            color: var(--text-secondary);
+        ">
+            ⏳ Loading dashboard configuration...
+        </div>
+    </div>
+
+    <!-- Configuration Management -->
+    <script src="src/config-manager.js"></script>
+
+    <!-- Components will be loaded here -->
+    <script type="module">
+        import { loadDashboard } from './src/dashboard-router.js';
+
+        // Wait for config to be ready
+        async function initializeDashboard() {
+            try {
+                console.log('Waiting for configuration...');
+                
+                // Give config manager time to initialize
+                let retries = 0;
+                while (!window.configManager.isReady() && retries < 30) {
+                    await new Promise(resolve => setTimeout(resolve, 100));
+                    retries++;
+                }
+
+                if (!window.configManager.isReady()) {
+                    throw new Error('Configuration failed to load after 3 seconds');
+                }
+
+                console.log('✓ Configuration ready');
+                window.configManager.debugStatus();
+
+                // Load the appropriate dashboard
+                const dashboard = new URLSearchParams(window.location.search).get('dashboard') || 'morning';
+                console.log(`Loading dashboard: ${dashboard}`);
+                
+                await loadDashboard(dashboard);
+                console.log(`✓ Dashboard loaded: ${dashboard}`);
+            } catch (error) {
+                console.error('Failed to initialize dashboard:', error);
+                document.getElementById('app').innerHTML = `
+                    <div style="
+                        background: #ffe5e5;
+                        color: #d20f39;
+                        padding: 40px;
+                        font-family: monospace;
+                        font-size: 18px;
+                        line-height: 1.6;
+                        border-radius: 6px;
+                    ">
+                        <h1 style="margin-bottom: 20px;">⚠️ Dashboard Initialization Failed</h1>
+                        <p style="margin-bottom: 20px;"><strong>Error:</strong> ${error.message}</p>
+                        <hr style="border: none; border-top: 1px solid #d20f39; margin: 20px 0;">
+                        <h3 style="margin-bottom: 10px;">Troubleshooting:</h3>
+                        <p style="margin-bottom: 15px;"><strong>Local Development:</strong></p>
+                        <pre style="background: #fff; padding: 10px; border-radius: 4px; overflow-x: auto;">cp .env.example .env
+# Edit .env with your API keys and passwords
+npm install
+npm run dev</pre>
+                        <p style="margin-top: 15px;"><strong>Production (K3s):</strong></p>
+                        <pre style="background: #fff; padding: 10px; border-radius: 4px; overflow-x: auto;">kubectl logs -n dashboards deployment/morning-dashboard
+# Check if init container created config.js</pre>
+                        <p style="margin-top: 15px;">Check browser console (F12) for more details.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', initializeDashboard);
+
+        // Also try initializing if document is already ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeDashboard);
+        } else {
+            initializeDashboard();
+        }
+    </script>
+</body>
+</html>
