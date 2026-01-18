@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
-import { DOMParser } from '@xmldom/xmldom';
+import { DOMParser } from 'xmldom';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
@@ -19,6 +19,20 @@ const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(express.json());
+// Serve static files from root (for HTML, CSS, JS in src/)
+app.use(express.static(__dirname, {
+  setHeaders: (res, path) => {
+    // Ensure correct MIME types
+    if (path.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    } else if (path.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    } else if (path.endsWith('.json')) {
+      res.setHeader('Content-Type', 'application/json');
+    }
+  }
+}));
+// Serve public folder (for any generated files)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ============================================

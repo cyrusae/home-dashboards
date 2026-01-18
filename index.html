@@ -18,11 +18,10 @@
         </div>
     </div>
 
-    <!-- Configuration Management -->
-    <script src="src/config-manager.js"></script>
-
     <!-- Components will be loaded here -->
     <script type="module">
+        // Load config manager first
+        import './src/config-manager.js';
         import { loadDashboard } from './src/dashboard-router.js';
 
         // Wait for config to be ready
