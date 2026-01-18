@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
