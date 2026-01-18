@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
-import { DOMParser } from 'xmldom';
+import { DOMParser } from '@xmldom/xmldom';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
@@ -91,8 +91,8 @@ app.get('/api/weather', async (req, res) => {
         windSpeed: Math.round(current.wind.speed),
         windDir: current.wind.deg || null,
         aqi: null, // Would need separate AQI API call
-        pressure: (current.main.pressure * 0.0295301).toFixed(2), // Convert Pa to inHg
-        pressureMb: current.main.pressure, // Store mb as well
+        pressure: current.main.pressure, // Already in hPa from OpenWeatherMap
+        pressureMb: current.main.pressure,
       },
       hourly: [],
       daily: [],
@@ -111,7 +111,7 @@ app.get('/api/weather', async (req, res) => {
           condition: item.weather[0].main,
           icon: item.weather[0].icon,
           precipProbability: Math.round(item.pop * 100),
-          pressure: (item.main.pressure * 0.0295301).toFixed(2),
+          pressure: item.main.pressure,
           pressureMb: item.main.pressure,
         });
       }

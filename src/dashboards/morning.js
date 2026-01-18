@@ -64,7 +64,7 @@ class Dashboard extends DashboardComponent {
       .dashboard {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
+        grid-template-rows: minmax(300px, auto) 1fr 1fr;
         gap: 30px;
         height: 100%;
         overflow: hidden;
@@ -74,6 +74,7 @@ class Dashboard extends DashboardComponent {
         grid-column: 1;
         grid-row: 1;
         height: auto;
+        min-height: 300px;
       }
 
       .row-2 {
@@ -83,6 +84,7 @@ class Dashboard extends DashboardComponent {
         grid-template-columns: 2fr 1fr;
         gap: 30px;
         overflow: hidden;
+        min-height: 0;
       }
 
       .row-3 {
@@ -92,6 +94,7 @@ class Dashboard extends DashboardComponent {
         grid-template-columns: 1fr 2fr;
         gap: 30px;
         overflow: hidden;
+        min-height: 0;
       }
 
       .section-title {
