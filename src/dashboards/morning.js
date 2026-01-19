@@ -59,13 +59,15 @@ class Dashboard extends DashboardComponent {
         display: block;
         width: 100%;
         height: 100%;
+        flex: 1;
       }
 
       .dashboard {
         display: grid;
         grid-template-columns: 1fr;
-        grid-template-rows: minmax(300px, auto) 1fr 1fr;
+        grid-template-rows: auto 1fr 1fr;
         gap: 30px;
+        width: 100%;
         height: 100%;
         overflow: hidden;
       }
@@ -73,7 +75,6 @@ class Dashboard extends DashboardComponent {
       .row-1 {
         grid-column: 1;
         grid-row: 1;
-        height: auto;
         min-height: 300px;
       }
 

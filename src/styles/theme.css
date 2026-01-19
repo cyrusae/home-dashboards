@@ -41,7 +41,7 @@
   --pressure-falling: #fe640b;    /* Peach (orange) */
   
   /* PST Time Accent Color - Variable for local tweaking */
-  --pst-accent: #3b0e75;          /* Mauve - can be changed locally */
+  --pst-accent: #8839ef;          /* Mauve - can be changed locally */
   
   /* ============================================
      VIEWPORT-RELATIVE TYPOGRAPHY
@@ -105,6 +105,16 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  margin: 0;
+}
+
+#app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 /* ============================================
