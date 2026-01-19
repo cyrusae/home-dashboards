@@ -9,6 +9,7 @@
 import { DashboardComponent } from '../components/base.js';
 import { TimeDisplay } from '../components/time-display.js';
 import { WeatherCurrent, WeatherForecast } from '../components/weather.js';
+import { Weather3Day } from '../components/weather-3day.js';
 
 class Dashboard extends DashboardComponent {
   constructor() {
@@ -27,12 +28,21 @@ class Dashboard extends DashboardComponent {
           <time-display></time-display>
         </div>
 
-        <!-- Row 2: Weather (66%) | Calendar (33%) -->
+        <!-- Row 2: Weather (current full row | today forecast + 3day stacked) -->
         <div class="row-2">
-          <div class="weather-container">
-            <div class="section-title" style="color: var(--accent-sky);">🌤️ Weather</div>
+          <div class="weather-current-container">
+            <div class="section-title" style="color: var(--accent-sky);">🌤️ Now</div>
             <weather-current></weather-current>
-            <weather-forecast></weather-forecast>
+          </div>
+          <div class="weather-details-column">
+            <div class="weather-forecast-container">
+              <div class="section-title" style="color: var(--accent-sky);">📊 Today</div>
+              <weather-forecast></weather-forecast>
+            </div>
+            <div class="weather-3day-container">
+              <div class="section-title" style="color: var(--accent-sky);">📅 Next 3 Days</div>
+              <weather-3day></weather-3day>
+            </div>
           </div>
           <div class="calendar-container">
             <div class="section-title" style="color: var(--accent-lavender);">📅 Today's Events</div>
@@ -82,10 +92,61 @@ class Dashboard extends DashboardComponent {
         grid-column: 1;
         grid-row: 2;
         display: grid;
-        grid-template-columns: 2fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
         gap: 30px;
         overflow: hidden;
         min-height: 0;
+      }
+
+      .weather-current-container {
+        border: 3px solid var(--accent-sky);
+        background: rgba(4, 165, 229, 0.05);
+        padding: 30px;
+        border-radius: 6px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .weather-details-column {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
+        gap: 30px;
+        min-height: 0;
+      }
+
+      .weather-forecast-container,
+      .weather-3day-container {
+        border: 3px solid var(--accent-sky);
+        background: rgba(4, 165, 229, 0.05);
+        padding: 30px;
+        border-radius: 6px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+      }
+
+      .weather-forecast-container > .section-title,
+      .weather-3day-container > .section-title {
+        margin-bottom: 15px;
+      }
+
+      weather-current {
+        flex: 1;
+        overflow-y: auto;
+        padding-left: 15px;
+      }
+
+      weather-forecast {
+        flex: 1;
+        overflow-y: auto;
+      }
+
+      weather-3day {
+        flex: 1;
+        overflow-y: auto;
       }
 
       .row-3 {
@@ -107,7 +168,6 @@ class Dashboard extends DashboardComponent {
         font-family: var(--font-family);
       }
 
-      .weather-container,
       .calendar-container,
       .tasks-container,
       .infrastructure-container {
@@ -121,45 +181,19 @@ class Dashboard extends DashboardComponent {
         min-height: 0;
       }
 
-      .weather-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto 1fr;
-        gap: 30px;
-      }
-
-      .weather-container > .section-title {
-        grid-column: 1 / -1;
-      }
-
-      weather-current {
-        grid-column: 1;
-        grid-row: 2;
-        overflow-y: auto;
-      }
-
-      weather-forecast {
-        grid-column: 2;
-        grid-row: 2;
-        overflow-y: auto;
-      }
-
       .calendar-container {
         border-color: var(--accent-lavender);
         background: rgba(114, 135, 253, 0.05);
-        min-height: 0;
       }
 
       .tasks-container {
         border-color: var(--accent-teal);
         background: rgba(23, 146, 153, 0.05);
-        min-height: 0;
       }
 
       .infrastructure-container {
         border-color: var(--accent-lavender);
         background: rgba(114, 135, 253, 0.05);
-        min-height: 0;
       }
 
       #calendar-content,

@@ -90,21 +90,25 @@ app.get('/api/weather', async (req, res) => {
         humidity: current.main.humidity,
         windSpeed: Math.round(current.wind.speed),
         windDir: current.wind.deg || null,
-        aqi: null, // Would need separate AQI API call
-        pressure: current.main.pressure, // Already in hPa from OpenWeatherMap
+        aqi: null,
+        pressure: current.main.pressure,
         pressureMb: current.main.pressure,
       },
       hourly: [],
       daily: [],
     };
 
-    // Process hourly forecast (next 12 hours)
+    // Process hourly forecast (today only)
     const now = new Date();
+    const todayEnd = new Date(now);
+    todayEnd.setHours(23, 59, 59, 999);
+
     for (let i = 0; i < data.list.length && result.hourly.length < 12; i++) {
       const item = data.list[i];
       const itemTime = new Date(item.dt * 1000);
       
-      if (itemTime > now) {
+      // Only include today's hours
+      if (itemTime > now && itemTime <= todayEnd) {
         result.hourly.push({
           time: itemTime.toISOString(),
           temp: Math.round(item.main.temp),
@@ -115,6 +119,43 @@ app.get('/api/weather', async (req, res) => {
           pressureMb: item.main.pressure,
         });
       }
+    }
+
+    // Process daily forecast (next 3 days)
+    const dailyMap = {};
+    for (const item of data.list) {
+      const itemTime = new Date(item.dt * 1000);
+      const dayKey = itemTime.toISOString().split('T')[0]; // YYYY-MM-DD
+
+      if (!dailyMap[dayKey]) {
+        dailyMap[dayKey] = {
+          date: dayKey,
+          temps: [],
+          precip: [],
+          pressures: [],
+          aqi: [],
+          conditions: new Set(),
+        };
+      }
+
+      dailyMap[dayKey].temps.push(item.main.temp);
+      dailyMap[dayKey].precip.push(item.pop * 100);
+      dailyMap[dayKey].pressures.push(item.main.pressure);
+      dailyMap[dayKey].conditions.add(item.weather[0].main);
+    }
+
+    // Convert to array, skip today, take next 3 days
+    const dailyDates = Object.keys(dailyMap).sort();
+    for (let i = 1; i < Math.min(4, dailyDates.length); i++) {
+      const day = dailyMap[dailyDates[i]];
+      result.daily.push({
+        date: day.date,
+        high: Math.round(Math.max(...day.temps)),
+        low: Math.round(Math.min(...day.temps)),
+        precipMax: Math.round(Math.max(...day.precip)),
+        pressureAvg: Math.round(Math.average(...day.pressures) || 0),
+        condition: Array.from(day.conditions).join(', '),
+      });
     }
 
     res.json(result);

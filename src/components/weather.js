@@ -226,24 +226,15 @@ class WeatherForecast extends DashboardComponent {
   }
 
   renderForecast(hourly) {
-    // Group by day
-    const todayItems = [];
-    const tomorrowItems = [];
-    const now = new Date();
-
-    for (const item of hourly.slice(0, 12)) {
-      const itemDate = new Date(item.time);
-      if (itemDate.toDateString() === now.toDateString()) {
-        todayItems.push(item);
-      } else {
-        tomorrowItems.push(item);
-      }
+    if (!hourly || hourly.length === 0) {
+      const html = `<div style="color: var(--text-light); font-style: italic; padding: 10px;">No forecast available</div>`;
+      this.setContent(html);
+      return;
     }
 
     const html = `
       <div class="weather-right">
         <div class="forecast-section">
-          <div class="forecast-header">TODAY</div>
           <table class="forecast-table">
             <thead>
               <tr>
@@ -255,30 +246,10 @@ class WeatherForecast extends DashboardComponent {
               </tr>
             </thead>
             <tbody>
-              ${todayItems.map(item => this.renderForecastRow(item)).join('')}
+              ${hourly.map(item => this.renderForecastRow(item)).join('')}
             </tbody>
           </table>
         </div>
-        
-        ${tomorrowItems.length > 0 ? `
-        <div class="forecast-section">
-          <div class="forecast-header">TOMORROW</div>
-          <table class="forecast-table">
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Temp</th>
-                <th></th>
-                <th>Rain</th>
-                <th>Pressure</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${tomorrowItems.map(item => this.renderForecastRow(item)).join('')}
-            </tbody>
-          </table>
-        </div>
-        ` : ''}
       </div>
     `;
 
@@ -294,17 +265,6 @@ class WeatherForecast extends DashboardComponent {
         background: rgba(4, 165, 229, 0.02);
         border-radius: 6px;
         overflow: hidden;
-      }
-
-      .forecast-header {
-        font-size: var(--size-small);
-        font-weight: bold;
-        color: var(--text-secondary);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        padding: 12px 16px;
-        border-bottom: 1px solid var(--latte-crust);
-        background: var(--latte-mantle);
       }
 
       .forecast-table {
