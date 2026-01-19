@@ -93,7 +93,7 @@ class Dashboard extends DashboardComponent {
         grid-column: 1;
         grid-row: 2;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 2fr 2fr;
         gap: 30px;
         overflow: hidden;
         min-height: 0;
@@ -162,7 +162,7 @@ class Dashboard extends DashboardComponent {
 
       .section-title {
         font-weight: bold;
-        font-size: var(--size-heading);
+        font-size: var(--size-small);
         margin-bottom: 20px;
         text-transform: uppercase;
         letter-spacing: 2px;

@@ -85,9 +85,7 @@ class WeatherCurrent extends DashboardComponent {
         </div>
         <div class="divider"></div>
         <div class="detail-row">
-          <span class="sunrise">🌅 ${this.getSunrise()}</span>
-        </div>
-        <div class="detail-row">
+          <span class="sunrise">🌅 ${this.getSunrise()}  • • •  </span>
           <span class="sunset">🌇 ${this.getSunset()}</span>
         </div>
       </div>
@@ -100,7 +98,7 @@ class WeatherCurrent extends DashboardComponent {
         justify-content: center;
         align-items: flex-start;
         padding: 20px;
-        background: rgba(153, 209, 219, 0.05);
+
         border-radius: 6px;
       }
 
@@ -127,7 +125,7 @@ class WeatherCurrent extends DashboardComponent {
       .detail-row {
         display: flex;
         gap: 15px;
-        font-size: var(--size-small);
+        font-size: var(--size-body);
         margin-bottom: 8px;
       }
 
@@ -152,7 +150,7 @@ class WeatherCurrent extends DashboardComponent {
       }
 
       .trend {
-        font-size: 20px;
+        font-size: var(--size-small);
       }
     `;
 

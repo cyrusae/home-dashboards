@@ -50,7 +50,7 @@
      ============================================ */
   
   /* Tiny labels (timestamps, details) */
-  --size-tiny: clamp(14px, 1vw, 20px);
+  --size-tiny: clamp(18px, 1vw, 20px);
   
   /* Small text (subtitles, secondary info) */
   --size-small: clamp(18px, 1.5vw, 24px);
@@ -76,7 +76,7 @@
   --line-height-loose: 1.8;
   
   /* Font Family */
-  --font-family: 'Courier New', monospace;
+  --font-family: "FantasqueSansMono Nerd Font", 'Courier New', monospace;
 }
 
 /* ============================================

@@ -80,9 +80,6 @@ npm run dev</pre>
         }
 
         // Initialize when DOM is ready
-        document.addEventListener('DOMContentLoaded', initializeDashboard);
-
-        // Also try initializing if document is already ready
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initializeDashboard);
         } else {

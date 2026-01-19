@@ -55,51 +55,56 @@ class Weather3Day extends DashboardComponent {
 
     const styles = `
       .daily-container {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
         height: 100%;
       }
 
       .day-card {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 15px;
-        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
         background: rgba(153, 209, 219, 0.05);
         border: 1px solid var(--frappe-crust);
         border-radius: 4px;
-        font-size: var(--size-tiny);
+        font-size: var(--size-body);
       }
 
       .day-date {
         font-weight: bold;
         color: var(--text-secondary);
-        white-space: nowrap;
-        min-width: 80px;
+        text-align: center;
+        border-bottom: 1px solid var(--frappe-crust);
+        padding-bottom: 8px;
+        margin-bottom: 5px;
       }
 
       .day-details {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
       }
 
       .day-detail-item {
         display: flex;
-        flex-direction: column;
-        gap: 2px;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
       }
 
       .detail-label {
         color: var(--text-light);
-        font-size: var(--size-tiny);
+        font-size: var(--size-small);
+        flex: 0 0 auto;
       }
 
       .detail-value {
         color: var(--text-primary);
         font-weight: bold;
         font-size: var(--size-small);
+        text-align: right;
       }
 
       .temps {
