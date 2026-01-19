@@ -10,6 +10,7 @@ import { DashboardComponent } from '../components/base.js';
 import { TimeDisplay } from '../components/time-display.js';
 import { WeatherCurrent, WeatherForecast } from '../components/weather.js';
 import { Weather3Day } from '../components/weather-3day.js';
+import { InfrastructureStatus } from '../components/infrastructure.js';
 
 class Dashboard extends DashboardComponent {
   constructor() {
@@ -58,7 +59,7 @@ class Dashboard extends DashboardComponent {
           </div>
           <div class="infrastructure-container">
             <div class="section-title" style="color: var(--accent-lavender);">🖥️ Infrastructure</div>
-            <div id="infrastructure-content">Loading status...</div>
+            <infrastructure-status></infrastructure-status>
           </div>
         </div>
       </div>
@@ -245,7 +246,6 @@ class Dashboard extends DashboardComponent {
     // Load data after component is mounted
     this.loadCalendarEvents();
     this.loadTasks();
-    this.loadInfrastructure();
   }
 
   async loadCalendarEvents() {
@@ -307,45 +307,6 @@ class Dashboard extends DashboardComponent {
     }
     html += '</div>';
     container.innerHTML = html;
-  }
-
-  async loadInfrastructure() {
-    try {
-      const response = await fetch('/api/prometheus/query?query=up');
-      if (!response.ok) throw new Error('Failed to load infrastructure');
-
-      const data = await response.json();
-      const container = this.query('#infrastructure-content');
-
-      container.innerHTML = `
-        <div class="infrastructure-status">
-          <div class="node-card">
-            <div class="node-name">Babbage</div>
-            <div class="node-status">🟢 Online</div>
-            <div class="node-detail">CPU: 45%</div>
-            <div class="node-detail">Memory: 62%</div>
-            <div class="node-detail">Pods: 12</div>
-          </div>
-          <div class="node-card">
-            <div class="node-name">Epimetheus</div>
-            <div class="node-status">🟢 Online</div>
-            <div class="node-detail">CPU: 32%</div>
-            <div class="node-detail">Memory: 48%</div>
-            <div class="node-detail">Pods: 8</div>
-          </div>
-          <div class="node-card">
-            <div class="node-name">Kabandha</div>
-            <div class="node-status">🟢 Online</div>
-            <div class="node-detail">CPU: 28%</div>
-            <div class="node-detail">Memory: 52%</div>
-            <div class="node-detail">Pods: 9</div>
-          </div>
-        </div>
-      `;
-    } catch (error) {
-      console.error('Infrastructure error:', error);
-      this.query('#infrastructure-content').innerHTML = `<div style="color: var(--accent-red); font-size: var(--size-small);">Error: ${error.message}</div>`;
-    }
   }
 }
 
