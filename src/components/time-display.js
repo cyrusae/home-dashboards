@@ -57,7 +57,7 @@ class TimeDisplay extends DashboardComponent {
 
       .date-box {
         border: 3px solid var(--accent-maroon);
-        background: rgba(230, 69, 83, 0.05);
+        background: rgba(234, 153, 156, 0.1);
         padding: 30px;
         border-radius: 6px;
         display: flex;
@@ -67,7 +67,7 @@ class TimeDisplay extends DashboardComponent {
 
       .est-box {
         border: 3px solid var(--accent-flamingo);
-        background: rgba(221, 120, 120, 0.05);
+        background: rgba(238, 190, 190, 0.1);
         padding: 30px;
         border-radius: 6px;
         display: flex;
@@ -108,7 +108,7 @@ class TimeDisplay extends DashboardComponent {
         font-family: var(--font-family);
         color: var(--pst-accent);
         line-height: var(--line-height-tight);
-        text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.3);
+        text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
       }
     `;
 

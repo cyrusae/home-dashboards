@@ -153,7 +153,7 @@ app.get('/api/weather', async (req, res) => {
         high: Math.round(Math.max(...day.temps)),
         low: Math.round(Math.min(...day.temps)),
         precipMax: Math.round(Math.max(...day.precip)),
-        pressureAvg: Math.round(Math.average(...day.pressures) || 0),
+        pressureAvg: Math.round((day.pressures.reduce((a, b) => a + b, 0) / day.pressures.length) || 0),
         condition: Array.from(day.conditions).join(', '),
       });
     }

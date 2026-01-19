@@ -100,7 +100,7 @@ class WeatherCurrent extends DashboardComponent {
         justify-content: center;
         align-items: flex-start;
         padding: 20px;
-        background: rgba(4, 165, 229, 0.02);
+        background: rgba(153, 209, 219, 0.05);
         border-radius: 6px;
       }
 
@@ -120,7 +120,7 @@ class WeatherCurrent extends DashboardComponent {
       .divider {
         width: 100%;
         height: 1px;
-        background: var(--latte-crust);
+        background: var(--frappe-crust);
         margin: 15px 0;
       }
 
@@ -262,7 +262,7 @@ class WeatherForecast extends DashboardComponent {
       }
 
       .forecast-section {
-        background: rgba(4, 165, 229, 0.02);
+        background: rgba(153, 209, 219, 0.05);
         border-radius: 6px;
         overflow: hidden;
       }
@@ -278,13 +278,13 @@ class WeatherForecast extends DashboardComponent {
         color: var(--text-secondary);
         text-align: left;
         padding: 10px;
-        border-bottom: 1px solid var(--latte-crust);
+        border-bottom: 1px solid var(--frappe-crust);
         font-weight: bold;
       }
 
       .forecast-table tbody td {
         padding: 10px;
-        border-bottom: 1px solid var(--latte-crust);
+        border-bottom: 1px solid var(--frappe-crust);
         color: var(--text-primary);
       }
 

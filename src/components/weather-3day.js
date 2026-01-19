@@ -66,8 +66,8 @@ class Weather3Day extends DashboardComponent {
         grid-template-columns: auto 1fr;
         gap: 15px;
         padding: 12px;
-        background: rgba(4, 165, 229, 0.03);
-        border: 1px solid var(--latte-crust);
+        background: rgba(153, 209, 219, 0.05);
+        border: 1px solid var(--frappe-crust);
         border-radius: 4px;
         font-size: var(--size-tiny);
       }
