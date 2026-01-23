@@ -1,4 +1,13 @@
 /* Catppuccin Frappé Palette & Typography */
+/* Explicitly load the font */
+@font-face {
+  font-family: '0xProto Nerd Font';
+  src: local('0xProto Nerd Font'),
+       local('0xProtoNerdFont-Regular'),
+       local('0xProto Nerd Font Regular');
+  font-weight: normal;
+  font-style: normal;
+}
 
 :root {
   /* Catppuccin Frappé Colors */
@@ -76,7 +85,8 @@
   --line-height-loose: 1.8;
   
   /* Font Family */
-  --font-family: "FantasqueSansMono Nerd Font", 'Courier New', monospace;
+  --font-family: '0xProto Nerd Font', monospace;
+  /*--font-family: 'Fira Code', 'Courier New', monospace;*/
 }
 
 /* ============================================

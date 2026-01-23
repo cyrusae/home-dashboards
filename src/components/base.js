@@ -17,6 +17,7 @@ export class DashboardComponent extends HTMLElement {
   setContent(html, styles = '') {
     const template = document.createElement('template');
     template.innerHTML = `
+      <link rel="stylesheet" href="/src/styles/theme.css">
       <style>
         :host {
           display: block;

@@ -137,7 +137,7 @@ class InfrastructureStatus extends DashboardComponent {
 
       .node-name {
         font-weight: bold;
-        font-size: var(--size-body);
+        font-size: var(--size-heading);
         color: var(--text-primary);
         text-transform: capitalize;
       }
@@ -146,7 +146,7 @@ class InfrastructureStatus extends DashboardComponent {
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: var(--size-small);
+        font-size: var(--size-body);
         font-weight: bold;
       }
 
@@ -173,7 +173,7 @@ class InfrastructureStatus extends DashboardComponent {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: var(--size-tiny);
+        font-size: var(--size-body);
         padding: 6px 0;
       }
 
@@ -254,7 +254,7 @@ class InfrastructureStatus extends DashboardComponent {
           Online
         </div>
         <div class="metric-row">
-          <span class="metric-label">CPU</span>
+          <span class="metric-label">CPU </span>
           <div style="display: flex; gap: 8px; align-items: center;">
             <span class="metric-value">${nodeData.cpu}%</span>
             <div class="metric-bar">
@@ -263,7 +263,7 @@ class InfrastructureStatus extends DashboardComponent {
           </div>
         </div>
         <div class="metric-row">
-          <span class="metric-label">Memory</span>
+          <span class="metric-label">Memory </span>
           <div style="display: flex; gap: 8px; align-items: center;">
             <span class="metric-value">${nodeData.memory}%</span>
             <div class="metric-bar">
@@ -272,7 +272,7 @@ class InfrastructureStatus extends DashboardComponent {
           </div>
         </div>
         <div class="metric-row">
-          <span class="metric-label">Pods</span>
+          <span class="metric-label">Pods </span>
           <span class="metric-value">${nodeData.pods}</span>
         </div>
       </div>

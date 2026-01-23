@@ -144,10 +144,15 @@ app.get('/api/weather', async (req, res) => {
       dailyMap[dayKey].conditions.add(item.weather[0].main);
     }
 
-    // Convert to array, skip today, take next 3 days
+    // Convert to array, filter out today, take next 3 days
+    const today = new Date().toISOString().split('T')[0];
     const dailyDates = Object.keys(dailyMap).sort();
-    for (let i = 1; i < Math.min(4, dailyDates.length); i++) {
-      const day = dailyMap[dailyDates[i]];
+    const futureDates = dailyDates.filter(date => date > today);  // ← Only future dates
+
+    console.log('Showing dates:', futureDates.slice(0, 3));  // Debug
+
+    for (let i = 0; i < Math.min(3, futureDates.length); i++) {
+      const day = dailyMap[futureDates[i]];
       result.daily.push({
         date: day.date,
         high: Math.round(Math.max(...day.temps)),
