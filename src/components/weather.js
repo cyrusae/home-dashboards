@@ -53,7 +53,7 @@ class WeatherCurrent extends DashboardComponent {
   renderCurrent(current) {
     const aqi = current.aqi ? this.getAQIColor(current.aqi) : null;
     const pressure = current.pressure || current.pressureMb;
-    const pressureTrend = this.getPressureTrend();
+    const pressureTrend = this.getPressureTrend(current.pressure);
     const sunrise = this.formatSunTime(current.sunrise);
     const sunset = this.formatSunTime(current.sunset);
 
@@ -168,11 +168,58 @@ class WeatherCurrent extends DashboardComponent {
     return { color: 'var(--aqi-hazardous)', label: 'Hazardous' };
   }
 
-  getPressureTrend() {
-    // This would need to compare current vs previous
-    // For now, return steady
-    return '➡️ Steady';
-  }
+   getPressureTrend(currentPressure) {
+     // Get stored pressure from 3 hours ago
+     const storedData = localStorage.getItem('weatherPressureHistory');
+     const now = Date.now();
+     
+     if (!storedData) {
+       // First time - store current pressure and return steady
+       this.storePressure(currentPressure, now);
+       return '➡️ Steady';
+     }
+     
+     const history = JSON.parse(storedData);
+     
+     // Clean up old entries (older than 6 hours)
+     const sixHoursAgo = now - (6 * 60 * 60 * 1000);
+     history.readings = history.readings.filter(r => r.timestamp > sixHoursAgo);
+     
+     // Store current reading
+     history.readings.push({ pressure: currentPressure, timestamp: now });
+     localStorage.setItem('weatherPressureHistory', JSON.stringify(history));
+     
+     // Need at least 2 readings, 2+ hours apart
+     if (history.readings.length < 2) {
+       return '➡️ Steady';
+     }
+     
+     // Compare with reading from ~3 hours ago
+     const threeHoursAgo = now - (3 * 60 * 60 * 1000);
+     const oldReading = history.readings.find(r => r.timestamp < threeHoursAgo);
+     
+     if (!oldReading) {
+       return '➡️ Steady';
+     }
+     
+     const diff = currentPressure - oldReading.pressure;
+     
+     // Significant change is +/- 2 hPa over 3 hours
+     if (diff > 2) {
+       return '⬆️ Rising';
+     } else if (diff < -2) {
+       return '⬇️ Falling';
+     } else {
+       return '➡️ Steady';
+     }
+   }
+
+   storePressure(pressure, timestamp) {
+     const history = {
+       readings: [{ pressure, timestamp }]
+     };
+     localStorage.setItem('weatherPressureHistory', JSON.stringify(history));
+   }
 
    formatSunTime(unixTimestamp) {
      if (!unixTimestamp) return '--:--';
