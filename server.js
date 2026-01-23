@@ -149,7 +149,7 @@ app.get('/api/weather', async (req, res) => {
     const dailyDates = Object.keys(dailyMap).sort();
     const futureDates = dailyDates.filter(date => date > today);  // ← Only future dates
 
-    console.log('Showing dates:', futureDates.slice(0, 3));  // Debug
+    // console.log('Showing dates:', futureDates.slice(0, 3));  // Debug
 
     for (let i = 0; i < Math.min(3, futureDates.length); i++) {
       const day = dailyMap[futureDates[i]];
