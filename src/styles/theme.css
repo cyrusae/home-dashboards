@@ -69,6 +69,9 @@
   
   /* Section labels and headings */
   --size-heading: clamp(32px, 4vw, 48px);
+
+  /* Somewhere in between of those */
+  --size-bigger: clamp(60px, 8vw, 85px);
   
   /* Large emphasized text (weather temp, event titles) */
   --size-large: clamp(100px, 15vw, 200px);
