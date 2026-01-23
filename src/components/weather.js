@@ -83,7 +83,7 @@ class WeatherCurrent extends DashboardComponent {
         </div>
         <div class="detail-row">
           <span class="label">Trend:</span>
-          <span class="value trend">${pressureTrend}</span>
+          <span class="value trend" style="color: ${this.getPressureTrendColor(pressureTrend)}">${pressureTrend}</span>
         </div>
         <div class="divider"></div>
         <div class="detail-row">
@@ -220,6 +220,16 @@ class WeatherCurrent extends DashboardComponent {
      };
      localStorage.setItem('weatherPressureHistory', JSON.stringify(history));
    }
+
+   getPressureTrendColor(trend) {
+  if (trend.includes('Rising') || trend.includes('⬆️')) {
+    return 'var(--pressure-rising)';
+  } else if (trend.includes('Falling') || trend.includes('⬇️')) {
+    return 'var(--pressure-falling)';
+  } else {
+    return 'var(--pressure-steady)';
+  }
+}
 
    formatSunTime(unixTimestamp) {
      if (!unixTimestamp) return '--:--';
