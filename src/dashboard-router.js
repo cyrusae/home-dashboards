@@ -21,6 +21,9 @@ async function loadDashboard(dashboardName) {
       case 'evening':
         dashboardModule = await import('./dashboards/evening.js');
         break;
+      case 'night':
+        dashboardModule = await import('./dashboards/night.js');
+        break;
       case 'tv':
         dashboardModule = await import('./dashboards/tv.js');
         break;
