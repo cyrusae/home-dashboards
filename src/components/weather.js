@@ -54,6 +54,8 @@ class WeatherCurrent extends DashboardComponent {
     const aqi = current.aqi ? this.getAQIColor(current.aqi) : null;
     const pressure = current.pressure || current.pressureMb;
     const pressureTrend = this.getPressureTrend();
+    const sunrise = this.formatSunTime(current.sunrise);
+    const sunset = this.formatSunTime(current.sunset);
 
     const html = `
       <div class="weather-left">
@@ -85,8 +87,8 @@ class WeatherCurrent extends DashboardComponent {
         </div>
         <div class="divider"></div>
         <div class="detail-row">
-          <span class="sunrise">🌅 ${this.getSunrise()}  • • •  </span>
-          <span class="sunset">🌇 ${this.getSunset()}</span>
+          <span class="sunrise">🌅 ${sunrise}  • • •  </span>
+          <span class="sunset">🌇 ${sunset}</span>
         </div>
       </div>
     `;
@@ -172,15 +174,17 @@ class WeatherCurrent extends DashboardComponent {
     return '➡️ Steady';
   }
 
-  getSunrise() {
-    // Would pull from weather API
-    return '7:34 AM';
-  }
-
-  getSunset() {
-    // Would pull from weather API
-    return '5:18 PM';
-  }
+   formatSunTime(unixTimestamp) {
+     if (!unixTimestamp) return '--:--';
+     
+     const date = new Date(unixTimestamp * 1000);
+     return date.toLocaleTimeString('en-US', {
+       hour: 'numeric',
+       minute: '2-digit',
+       hour12: true,
+       timeZone: 'America/Los_Angeles'  // Match your PST timezone
+     });
+   }
 }
 
 class WeatherForecast extends DashboardComponent {

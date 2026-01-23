@@ -93,6 +93,8 @@ app.get('/api/weather', async (req, res) => {
         aqi: null,
         pressure: current.main.pressure,
         pressureMb: current.main.pressure,
+        sunrise: data.city.sunrise,
+        sunset: data.city.sunset,
       },
       hourly: [],
       daily: [],
@@ -148,8 +150,6 @@ app.get('/api/weather', async (req, res) => {
     const today = new Date().toISOString().split('T')[0];
     const dailyDates = Object.keys(dailyMap).sort();
     const futureDates = dailyDates.filter(date => date > today);  // ← Only future dates
-
-    // console.log('Showing dates:', futureDates.slice(0, 3));  // Debug
 
     for (let i = 0; i < Math.min(3, futureDates.length); i++) {
       const day = dailyMap[futureDates[i]];
