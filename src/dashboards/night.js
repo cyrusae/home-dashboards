@@ -1,7 +1,7 @@
 /**
  * Night Dashboard Layout
  * Minimal black screen with:
- *   - Large rotated time (90° clockwise) on left vertical edge
+ *   - Large rotated time (90° counterclockwise) on left vertical edge
  *   - Simple insomnia checklist in dark red
  */
 
@@ -28,23 +28,23 @@ class Dashboard extends DashboardComponent {
   render() {
     const html = `
       <div class="night-container">
-        <!-- Rotated time on left edge -->
+        <!-- Rotated time on left -->
         <div class="time-vertical">
           <div class="time-display" id="nightTime">--:--</div>
         </div>
 
-        <!-- Insomnia checklist -->
+        <!-- Insomnia checklist on right -->
         <div class="checklist-container">
           <div class="checklist-title">If you're awake:</div>
           <div class="checklist">
-            <div class="checklist-item">↦ Have you taken your night meds?</div>
-            <div class="checklist-item">↦ Did you eat something in the last 4 hours?</div>
-            <div class="checklist-item">↦ When did you last drink water?</div>
-            <div class="checklist-item">↦ Do you need to go to the bathroom?</div>
-            <div class="checklist-item">↦ Does it hurt to be awake? Maxalt</div>
-            <div class="checklist-item">↦ Are you scared to be awake? Hydroxyzine</div>
-            <div class="checklist-item">↦ Remember: you are loved by nerds! They want you to get rest!</div>
+            <div class="checklist-item">Can you feel your BLADDER? Go to the BATHROOM!</div>
+            <div class="checklist-item">Are you THIRSTY? There's WATER by the bed</div>
+            <div class="checklist-item">Are you HUNGRY? Find something to EAT</div>
+            <div class="checklist-item">Does it HURT to be awake? Consider MAXALT</div>
+            <div class="checklist-item">Are you AFRAID to sleep? Consider HYDROXYZINE</div>
+            <div class="checklist-item">Is this screen too BRIGHT? Try a BLINDFOLD</div>
           </div>
+          <div class="checklist-title">Remember: You are loved by nerds! They want you to get rest! <3</div>
         </div>
       </div>
     `;
@@ -58,66 +58,63 @@ class Dashboard extends DashboardComponent {
       }
 
       .night-container {
-        display: flex;
-        width: 100%;
+        display: grid;
+        grid-template-columns: minmax(15vw, 25vw) 1fr;
+        gap: 5vw;
+        width: 100vw;
         height: 100vh;
         background: #000000;
-        position: relative;
-        overflow: hidden;
+        padding: 5vh 5vw;
+        box-sizing: border-box;
       }
 
-      /* Rotated time on left vertical edge */
+      /* Rotated time column */
       .time-vertical {
-        position: absolute;
-        left: 0;
-        top: 0;
-        height: 100vh;
-        width: 200px;
         display: flex;
         align-items: center;
         justify-content: center;
+        grid-column: 1;
       }
 
       .time-display {
-        font-size: clamp(120px, 15vw, 180px);
+        font-size: var(--size-massive);
         font-weight: bold;
         font-family: var(--font-family);
         color: #3d0000;
         line-height: 1;
         letter-spacing: 0.05em;
-        transform: rotate(90deg);
+        transform: rotate(270deg);
         transform-origin: center center;
         white-space: nowrap;
       }
 
-      /* Checklist in center-right */
+      /* Checklist column */
       .checklist-container {
-        margin-left: 220px;
-        padding: 60px 80px;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        gap: 40px;
-        flex: 1;
+        gap: 3vh;
+        grid-column: 2;
+        padding: 2vh 2vw;
       }
 
       .checklist-title {
-        font-size: clamp(28px, 3vw, 36px);
+        font-size: clamp(2rem, 3vw, 3rem);
         font-weight: bold;
         color: #4a0000;
         font-family: var(--font-family);
-        margin-bottom: 20px;
+        margin-bottom: 2vh;
         letter-spacing: 0.02em;
       }
 
       .checklist {
         display: flex;
         flex-direction: column;
-        gap: 25px;
+        gap: 2vh;
       }
 
       .checklist-item {
-        font-size: clamp(20px, 2vw, 28px);
+        font-size: clamp(2rem, 2vw, 3rem);
         color: #3d0000;
         font-family: var(--font-family);
         line-height: 1.6;
@@ -126,47 +123,48 @@ class Dashboard extends DashboardComponent {
 
       /* Responsive adjustments */
       @media (max-width: 1200px) {
+        .night-container {
+          grid-template-columns: minmax(12vw, 20vw) 1fr;
+          gap: 4vw;
+          padding: 3vh 3vw;
+        }
+
         .time-display {
-          font-size: clamp(80px, 12vw, 120px);
-        }
-
-        .time-vertical {
-          width: 150px;
-        }
-
-        .checklist-container {
-          margin-left: 170px;
-          padding: 40px 60px;
+          font-size: clamp(6rem, 12vw, 15rem);
         }
 
         .checklist-title {
-          font-size: clamp(22px, 2.5vw, 30px);
+          font-size: clamp(1.5rem, 2.5vw, 2rem);
         }
 
         .checklist-item {
-          font-size: clamp(16px, 1.8vw, 24px);
+          font-size: clamp(1rem, 1.8vw, 1.75rem);
         }
       }
 
       @media (max-width: 768px) {
         .night-container {
-          flex-direction: column;
+          grid-template-columns: 1fr;
+          grid-template-rows: auto 1fr;
+          gap: 3vh;
+          padding: 2vh 4vw;
         }
 
         .time-vertical {
-          position: relative;
-          width: 100%;
-          height: 120px;
+          grid-column: 1;
+          grid-row: 1;
+          height: auto;
         }
 
         .time-display {
           transform: rotate(0deg);
-          font-size: clamp(60px, 10vw, 90px);
+          font-size: clamp(4rem, 10vw, 6rem);
         }
 
         .checklist-container {
-          margin-left: 0;
-          padding: 30px 40px;
+          grid-column: 1;
+          grid-row: 2;
+          padding: 1vh 2vw;
         }
       }
     `;
