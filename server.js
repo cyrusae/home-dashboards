@@ -93,6 +93,8 @@ app.get('/api/weather', async (req, res) => {
         aqi: null,
         pressure: current.main.pressure,
         pressureMb: current.main.pressure,
+        sunrise: data.city.sunrise,
+        sunset: data.city.sunset,
       },
       hourly: [],
       daily: [],
@@ -144,16 +146,19 @@ app.get('/api/weather', async (req, res) => {
       dailyMap[dayKey].conditions.add(item.weather[0].main);
     }
 
-    // Convert to array, skip today, take next 3 days
+    // Convert to array, filter out today, take next 3 days
+    const today = new Date().toISOString().split('T')[0];
     const dailyDates = Object.keys(dailyMap).sort();
-    for (let i = 1; i < Math.min(4, dailyDates.length); i++) {
-      const day = dailyMap[dailyDates[i]];
+    const futureDates = dailyDates.filter(date => date > today);  // ← Only future dates
+
+    for (let i = 0; i < Math.min(3, futureDates.length); i++) {
+      const day = dailyMap[futureDates[i]];
       result.daily.push({
         date: day.date,
         high: Math.round(Math.max(...day.temps)),
         low: Math.round(Math.min(...day.temps)),
         precipMax: Math.round(Math.max(...day.precip)),
-        pressureAvg: Math.round(Math.average(...day.pressures) || 0),
+        pressureAvg: Math.round((day.pressures.reduce((a, b) => a + b, 0) / day.pressures.length) || 0),
         condition: Array.from(day.conditions).join(', '),
       });
     }

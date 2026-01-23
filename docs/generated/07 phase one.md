@@ -1313,19 +1313,19 @@ npm run dev
 
 Before Phase 2, verify locally:
 
-- [ ] Project starts: `npm run dev` (no errors)
-- [ ] Page loads: `http://localhost:3000?dashboard=morning`
-- [ ] Config loads: Browser console shows `✓ ConfigManager: Using backend`
-- [ ] Time displays: PST time is large and updating every second
-- [ ] EST shows: Small "EST: HH:MM" next to PST
-- [ ] Date shows: Day name, month, date (e.g., "Friday, Jan 18")
+- [x] Project starts: `npm run dev` (no errors)
+- [x] Page loads: `http://localhost:3000?dashboard=morning`
+- [x] Config loads: Browser console shows `✓ ConfigManager: Using backend`
+- [x] Time displays: PST time is large and updating every second
+- [x] EST shows: Small "EST: HH:MM" next to PST
+- [x] Date shows: Day name, month, date (e.g., "Friday, Jan 18")
 - [ ] Weather loads: Current temp, condition, humidity, wind, pressure
-- [ ] Weather forecast: Shows hours with temps, icons, rain %, pressure
-- [ ] Calendar loads: Shows today's events (or "No events today")
-- [ ] Tasks show: All 7 morning routine items visible
-- [ ] Infrastructure placeholder: Shows 3 node cards (mock data)
-- [ ] Colors are correct: Soft gray background, sky blue weather, etc.
-- [ ] No errors in console: Browser F12 → Console tab
+- [x] Weather forecast: Shows hours with temps, icons, rain %, pressure
+- [x] Calendar loads: Shows today's events (or "No events today")
+- [x] Tasks show: All 7 morning routine items visible
+- [x] Infrastructure placeholder: Shows 3 node cards (mock data)
+- [x] Colors are correct: Soft gray background, sky blue weather, etc.
+- [x] No errors in console: Browser F12 → Console tab
 
 ---
 

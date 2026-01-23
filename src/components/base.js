@@ -17,53 +17,13 @@ export class DashboardComponent extends HTMLElement {
   setContent(html, styles = '') {
     const template = document.createElement('template');
     template.innerHTML = `
+      <link rel="stylesheet" href="/src/styles/theme.css">
       <style>
         :host {
           display: block;
         }
         
-        /* Inherit CSS variables from root */
-        :host {
-          --latte-base: #eff1f5;
-          --latte-mantle: #e6e9ef;
-          --latte-crust: #dce0e8;
-          --bg-soft: #e6e9ef;
-          --text-primary: #4c4f69;
-          --text-secondary: #6c6f85;
-          --text-light: #9ca0b0;
-          --accent-sky: #04a5e5;
-          --accent-teal: #179299;
-          --accent-lavender: #7287fd;
-          --accent-maroon: #e64553;
-          --accent-flamingo: #dd7878;
-          --accent-red: #d20f39;
-          --accent-peach: #fe640b;
-          --accent-green: #40a02f;
-          --accent-yellow: #df8e1d;
-          --accent-mauve: #8839ef;
-          --pst-accent: #8839ef;
-          --aqi-good: #40a02f;
-          --aqi-moderate: #df8e1d;
-          --aqi-unhealthy-sensitive: #fe640b;
-          --aqi-unhealthy: #d20f39;
-          --aqi-very-unhealthy: #8839ef;
-          --aqi-hazardous: #1a1a1a;
-          --pressure-rising: #dd7878;
-          --pressure-steady: #9ca0b0;
-          --pressure-falling: #fe640b;
-          --size-tiny: clamp(14px, 1vw, 20px);
-          --size-small: clamp(18px, 1.5vw, 24px);
-          --size-body: clamp(24px, 2vw, 32px);
-          --size-heading: clamp(32px, 4vw, 48px);
-          --size-large: clamp(100px, 15vw, 200px);
-          --size-huge: clamp(200px, 30vw, 400px);
-          --size-massive: clamp(300px, 40vw, 500px);
-          --font-family: 'Courier New', monospace;
-          --line-height-tight: 1.2;
-          --line-height-normal: 1.5;
-          --line-height-loose: 1.8;
-        }
-        
+        /* Component styles inherit CSS variables from root theme.css */
         ${styles}
       </style>
       ${html}
@@ -114,9 +74,9 @@ export class DashboardComponent extends HTMLElement {
   showError(message) {
     const error = document.createElement('div');
     error.style.cssText = `
-      background-color: rgba(210, 15, 57, 0.1);
-      border: 2px solid #d20f39;
-      color: #d20f39;
+      background-color: rgba(231, 130, 132, 0.1);
+      border: 2px solid var(--accent-red);
+      color: var(--accent-red);
       padding: 16px;
       border-radius: 4px;
       font-size: var(--size-body);

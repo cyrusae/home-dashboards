@@ -53,7 +53,9 @@ class WeatherCurrent extends DashboardComponent {
   renderCurrent(current) {
     const aqi = current.aqi ? this.getAQIColor(current.aqi) : null;
     const pressure = current.pressure || current.pressureMb;
-    const pressureTrend = this.getPressureTrend();
+    const pressureTrend = this.getPressureTrend(current.pressure);
+    const sunrise = this.formatSunTime(current.sunrise);
+    const sunset = this.formatSunTime(current.sunset);
 
     const html = `
       <div class="weather-left">
@@ -81,14 +83,12 @@ class WeatherCurrent extends DashboardComponent {
         </div>
         <div class="detail-row">
           <span class="label">Trend:</span>
-          <span class="value trend">${pressureTrend}</span>
+          <span class="value trend" style="color: ${this.getPressureTrendColor(pressureTrend)}">${pressureTrend}</span>
         </div>
         <div class="divider"></div>
         <div class="detail-row">
-          <span class="sunrise">🌅 ${this.getSunrise()}</span>
-        </div>
-        <div class="detail-row">
-          <span class="sunset">🌇 ${this.getSunset()}</span>
+          <span class="sunrise">🌅 ${sunrise}  • • •  </span>
+          <span class="sunset">🌇 ${sunset}</span>
         </div>
       </div>
     `;
@@ -100,7 +100,7 @@ class WeatherCurrent extends DashboardComponent {
         justify-content: center;
         align-items: flex-start;
         padding: 20px;
-        background: rgba(4, 165, 229, 0.02);
+
         border-radius: 6px;
       }
 
@@ -120,14 +120,14 @@ class WeatherCurrent extends DashboardComponent {
       .divider {
         width: 100%;
         height: 1px;
-        background: var(--latte-crust);
+        background: var(--frappe-crust);
         margin: 15px 0;
       }
 
       .detail-row {
         display: flex;
         gap: 15px;
-        font-size: var(--size-small);
+        font-size: var(--size-body);
         margin-bottom: 8px;
       }
 
@@ -152,7 +152,7 @@ class WeatherCurrent extends DashboardComponent {
       }
 
       .trend {
-        font-size: 20px;
+        font-size: var(--size-small);
       }
     `;
 
@@ -168,21 +168,80 @@ class WeatherCurrent extends DashboardComponent {
     return { color: 'var(--aqi-hazardous)', label: 'Hazardous' };
   }
 
-  getPressureTrend() {
-    // This would need to compare current vs previous
-    // For now, return steady
-    return '➡️ Steady';
-  }
+   getPressureTrend(currentPressure) {
+     // Get stored pressure from 3 hours ago
+     const storedData = localStorage.getItem('weatherPressureHistory');
+     const now = Date.now();
+     
+     if (!storedData) {
+       // First time - store current pressure and return steady
+       this.storePressure(currentPressure, now);
+       return '➡️ Steady';
+     }
+     
+     const history = JSON.parse(storedData);
+     
+     // Clean up old entries (older than 6 hours)
+     const sixHoursAgo = now - (6 * 60 * 60 * 1000);
+     history.readings = history.readings.filter(r => r.timestamp > sixHoursAgo);
+     
+     // Store current reading
+     history.readings.push({ pressure: currentPressure, timestamp: now });
+     localStorage.setItem('weatherPressureHistory', JSON.stringify(history));
+     
+     // Need at least 2 readings, 2+ hours apart
+     if (history.readings.length < 2) {
+       return '➡️ Steady';
+     }
+     
+     // Compare with reading from ~3 hours ago
+     const threeHoursAgo = now - (3 * 60 * 60 * 1000);
+     const oldReading = history.readings.find(r => r.timestamp < threeHoursAgo);
+     
+     if (!oldReading) {
+       return '➡️ Steady';
+     }
+     
+     const diff = currentPressure - oldReading.pressure;
+     
+     // Significant change is +/- 2 hPa over 3 hours
+     if (diff > 2) {
+       return '⬆️ Rising';
+     } else if (diff < -2) {
+       return '⬇️ Falling';
+     } else {
+       return '➡️ Steady';
+     }
+   }
 
-  getSunrise() {
-    // Would pull from weather API
-    return '7:34 AM';
-  }
+   storePressure(pressure, timestamp) {
+     const history = {
+       readings: [{ pressure, timestamp }]
+     };
+     localStorage.setItem('weatherPressureHistory', JSON.stringify(history));
+   }
 
-  getSunset() {
-    // Would pull from weather API
-    return '5:18 PM';
+   getPressureTrendColor(trend) {
+  if (trend.includes('Rising') || trend.includes('⬆️')) {
+    return 'var(--pressure-rising)';
+  } else if (trend.includes('Falling') || trend.includes('⬇️')) {
+    return 'var(--pressure-falling)';
+  } else {
+    return 'var(--pressure-steady)';
   }
+}
+
+   formatSunTime(unixTimestamp) {
+     if (!unixTimestamp) return '--:--';
+     
+     const date = new Date(unixTimestamp * 1000);
+     return date.toLocaleTimeString('en-US', {
+       hour: 'numeric',
+       minute: '2-digit',
+       hour12: true,
+       timeZone: 'America/Los_Angeles'  // Match your PST timezone
+     });
+   }
 }
 
 class WeatherForecast extends DashboardComponent {
@@ -262,7 +321,7 @@ class WeatherForecast extends DashboardComponent {
       }
 
       .forecast-section {
-        background: rgba(4, 165, 229, 0.02);
+        background: rgba(153, 209, 219, 0.05);
         border-radius: 6px;
         overflow: hidden;
       }
@@ -278,13 +337,13 @@ class WeatherForecast extends DashboardComponent {
         color: var(--text-secondary);
         text-align: left;
         padding: 10px;
-        border-bottom: 1px solid var(--latte-crust);
+        border-bottom: 1px solid var(--frappe-crust);
         font-weight: bold;
       }
 
       .forecast-table tbody td {
         padding: 10px;
-        border-bottom: 1px solid var(--latte-crust);
+        border-bottom: 1px solid var(--frappe-crust);
         color: var(--text-primary);
       }
 

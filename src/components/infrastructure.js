@@ -1,7 +1,7 @@
 /**
  * Infrastructure Status Component
  * Displays 3-node K3s cluster health as cards with conditional coloring
- * Fetches real data from Prometheus
+ * Fetches real data from Prometheus using nodename labels
  */
 
 import { DashboardComponent } from '../components/base.js';
@@ -9,7 +9,8 @@ import { DashboardComponent } from '../components/base.js';
 class InfrastructureStatus extends DashboardComponent {
   constructor() {
     super();
-    this.nodes = ['Babbage', 'Epimetheus', 'Kabandha'];
+    // Node names in lowercase to match Prometheus labels
+    this.nodes = ['babbage', 'epimetheus', 'kabandha'];
   }
 
   connectedCallback() {
@@ -42,8 +43,9 @@ class InfrastructureStatus extends DashboardComponent {
       const nodeData = {};
       for (const node of this.nodes) {
         try {
-          // Check if node is up
-          const upResponse = await fetch(`${prometheusUrl}/api/v1/query?query=up{job="kubernetes-nodes",kubernetes_io_hostname="${node}"}`);
+          // Check if node is up using node_uname_info
+          const upQuery = `up{job="node-exporter"} * on(instance) group_left(nodename) node_uname_info{nodename="${node}"}`;
+          const upResponse = await fetch(`/api/prometheus/query?query=${encodeURIComponent(upQuery)}`);
           const upData = await upResponse.json();
           const isUp = upData.data?.result?.[0]?.value?.[1] === '1';
 
@@ -52,18 +54,21 @@ class InfrastructureStatus extends DashboardComponent {
             continue;
           }
 
-          // Fetch CPU usage
-          const cpuResponse = await fetch(`${prometheusUrl}/api/v1/query?query=100-(avg by (kubernetes_io_hostname) (irate(node_cpu_seconds_total{mode="idle",kubernetes_io_hostname="${node}"}[5m])))*100`);
+          // Fetch CPU usage (100% - idle%)
+          const cpuQuery = `100 - (avg by (nodename) (irate(node_cpu_seconds_total{mode="idle"}[5m]) * on(instance) group_left(nodename) node_uname_info{nodename="${node}"}) * 100)`;
+          const cpuResponse = await fetch(`/api/prometheus/query?query=${encodeURIComponent(cpuQuery)}`);
           const cpuData = await cpuResponse.json();
           const cpu = Math.round(parseFloat(cpuData.data?.result?.[0]?.value?.[1] || 0));
 
           // Fetch memory usage
-          const memResponse = await fetch(`${prometheusUrl}/api/v1/query?query=(1-(node_memory_MemAvailable_bytes{kubernetes_io_hostname="${node}"}/node_memory_MemTotal_bytes{kubernetes_io_hostname="${node}"}))*100`);
+          const memQuery = `(1 - (node_memory_MemAvailable_bytes * on(instance) group_left(nodename) node_uname_info{nodename="${node}"} / (node_memory_MemTotal_bytes * on(instance) group_left(nodename) node_uname_info{nodename="${node}"}))) * 100`;
+          const memResponse = await fetch(`/api/prometheus/query?query=${encodeURIComponent(memQuery)}`);
           const memData = await memResponse.json();
           const memory = Math.round(parseFloat(memData.data?.result?.[0]?.value?.[1] || 0));
 
-          // Fetch running pods
-          const podsResponse = await fetch(`${prometheusUrl}/api/v1/query?query=kubelet_running_pods{node="${node}"}`);
+          // Fetch running pods using kubelet_running_pods with node label
+          const podsQuery = `kubelet_running_pods{node="${node}",job="kubelet"}`;
+          const podsResponse = await fetch(`/api/prometheus/query?query=${encodeURIComponent(podsQuery)}`);
           const podsData = await podsResponse.json();
           const pods = Math.round(parseFloat(podsData.data?.result?.[0]?.value?.[1] || 0));
 
@@ -117,30 +122,31 @@ class InfrastructureStatus extends DashboardComponent {
 
       .node-card.healthy {
         border-color: var(--accent-green);
-        background: rgba(64, 160, 47, 0.05);
+        background: rgba(166, 209, 137, 0.1);
       }
 
       .node-card.warning {
         border-color: var(--accent-yellow);
-        background: rgba(223, 142, 29, 0.05);
+        background: rgba(229, 200, 144, 0.1);
       }
 
       .node-card.critical {
         border-color: var(--accent-red);
-        background: rgba(210, 15, 57, 0.05);
+        background: rgba(231, 130, 132, 0.1);
       }
 
       .node-name {
         font-weight: bold;
-        font-size: var(--size-body);
+        font-size: var(--size-heading);
         color: var(--text-primary);
+        text-transform: capitalize;
       }
 
       .node-status {
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: var(--size-small);
+        font-size: var(--size-body);
         font-weight: bold;
       }
 
@@ -167,7 +173,7 @@ class InfrastructureStatus extends DashboardComponent {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: var(--size-tiny);
+        font-size: var(--size-body);
         padding: 6px 0;
       }
 
@@ -186,7 +192,7 @@ class InfrastructureStatus extends DashboardComponent {
       .metric-bar {
         width: 60px;
         height: 4px;
-        background: var(--latte-crust);
+        background: var(--frappe-crust);
         border-radius: 2px;
         overflow: hidden;
         margin-left: 10px;
@@ -222,11 +228,13 @@ class InfrastructureStatus extends DashboardComponent {
   renderNodeCard(nodeName, nodeData, clusterHealth) {
     const statusClass = this.getNodeStatusClass(nodeData);
     const statusColor = this.getStatusColor(nodeData.status);
+    // Capitalize first letter for display
+    const displayName = nodeName.charAt(0).toUpperCase() + nodeName.slice(1);
 
     if (nodeData.status !== 'up') {
       return `
         <div class="node-card ${statusClass}">
-          <div class="node-name">${nodeName}</div>
+          <div class="node-name">${displayName}</div>
           <div class="node-status">
             <span class="status-indicator ${nodeData.status}"></span>
             ${nodeData.status === 'down' ? 'Node Down' : 'Error'}
@@ -240,13 +248,13 @@ class InfrastructureStatus extends DashboardComponent {
 
     return `
       <div class="node-card ${statusClass}">
-        <div class="node-name">${nodeName}</div>
+        <div class="node-name">${displayName}</div>
         <div class="node-status">
           <span class="status-indicator ${nodeData.status}"></span>
           Online
         </div>
         <div class="metric-row">
-          <span class="metric-label">CPU</span>
+          <span class="metric-label">CPU </span>
           <div style="display: flex; gap: 8px; align-items: center;">
             <span class="metric-value">${nodeData.cpu}%</span>
             <div class="metric-bar">
@@ -255,7 +263,7 @@ class InfrastructureStatus extends DashboardComponent {
           </div>
         </div>
         <div class="metric-row">
-          <span class="metric-label">Memory</span>
+          <span class="metric-label">Memory </span>
           <div style="display: flex; gap: 8px; align-items: center;">
             <span class="metric-value">${nodeData.memory}%</span>
             <div class="metric-bar">
@@ -264,7 +272,7 @@ class InfrastructureStatus extends DashboardComponent {
           </div>
         </div>
         <div class="metric-row">
-          <span class="metric-label">Pods</span>
+          <span class="metric-label">Pods </span>
           <span class="metric-value">${nodeData.pods}</span>
         </div>
       </div>

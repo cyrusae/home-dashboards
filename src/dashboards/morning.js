@@ -93,7 +93,7 @@ class Dashboard extends DashboardComponent {
         grid-column: 1;
         grid-row: 2;
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: 1fr 2fr 2fr;
         gap: 30px;
         overflow: hidden;
         min-height: 0;
@@ -101,7 +101,7 @@ class Dashboard extends DashboardComponent {
 
       .weather-current-container {
         border: 3px solid var(--accent-sky);
-        background: rgba(4, 165, 229, 0.05);
+        background: rgba(153, 209, 219, 0.1);
         padding: 30px;
         border-radius: 6px;
         overflow: hidden;
@@ -120,7 +120,7 @@ class Dashboard extends DashboardComponent {
       .weather-forecast-container,
       .weather-3day-container {
         border: 3px solid var(--accent-sky);
-        background: rgba(4, 165, 229, 0.05);
+        background: rgba(153, 209, 219, 0.1);
         padding: 30px;
         border-radius: 6px;
         overflow: hidden;
@@ -162,7 +162,7 @@ class Dashboard extends DashboardComponent {
 
       .section-title {
         font-weight: bold;
-        font-size: var(--size-heading);
+        font-size: var(--size-small);
         margin-bottom: 20px;
         text-transform: uppercase;
         letter-spacing: 2px;
@@ -173,7 +173,7 @@ class Dashboard extends DashboardComponent {
       .tasks-container,
       .infrastructure-container {
         border: 3px solid var(--accent-sky);
-        background: rgba(4, 165, 229, 0.05);
+        background: rgba(153, 209, 219, 0.1);
         padding: 30px;
         border-radius: 6px;
         overflow: hidden;
@@ -184,17 +184,17 @@ class Dashboard extends DashboardComponent {
 
       .calendar-container {
         border-color: var(--accent-lavender);
-        background: rgba(114, 135, 253, 0.05);
+        background: rgba(186, 187, 241, 0.1);
       }
 
       .tasks-container {
         border-color: var(--accent-teal);
-        background: rgba(23, 146, 153, 0.05);
+        background: rgba(129, 200, 190, 0.1);
       }
 
       .infrastructure-container {
         border-color: var(--accent-lavender);
-        background: rgba(114, 135, 253, 0.05);
+        background: rgba(186, 187, 241, 0.1);
       }
 
       #calendar-content,
@@ -210,11 +210,11 @@ class Dashboard extends DashboardComponent {
       }
 
       ::-webkit-scrollbar-track {
-        background: rgba(0, 0, 0, 0.05);
+        background: rgba(0, 0, 0, 0.1);
       }
 
       ::-webkit-scrollbar-thumb {
-        background: rgba(0, 0, 0, 0.2);
+        background: rgba(255, 255, 255, 0.2);
         border-radius: 4px;
       }
 

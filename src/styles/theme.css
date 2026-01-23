@@ -1,47 +1,56 @@
-/* Catppuccin Latte Palette & Typography */
+/* Catppuccin Frappé Palette & Typography */
+/* Explicitly load the font */
+@font-face {
+  font-family: '0xProto Nerd Font';
+  src: local('0xProto Nerd Font'),
+       local('0xProtoNerdFont-Regular'),
+       local('0xProto Nerd Font Regular');
+  font-weight: normal;
+  font-style: normal;
+}
 
 :root {
-  /* Catppuccin Latte Colors */
-  --latte-base: #eff1f5;
-  --latte-mantle: #e6e9ef;
-  --latte-crust: #dce0e8;
+  /* Catppuccin Frappé Colors */
+  --frappe-base: #303446;
+  --frappe-mantle: #292c3c;
+  --frappe-crust: #232634;
   
-  /* Soft light gray background (slightly warmer than white) */
-  --bg-soft: #e6e9ef;
+  /* Dark background */
+  --bg-soft: #292c3c;
   
   /* Text Colors */
-  --text-primary: #4c4f69;
-  --text-secondary: #6c6f85;
-  --text-light: #9ca0b0;
+  --text-primary: #c6d0f5;
+  --text-secondary: #a5adce;
+  --text-light: #838ba7;
   
   /* Accent Colors */
-  --accent-red: #d20f39;
-  --accent-peach: #fe640b;
-  --accent-green: #40a02f;
-  --accent-teal: #179299;
-  --accent-blue: #1e66f5;
-  --accent-sky: #04a5e5;
-  --accent-lavender: #7287fd;
-  --accent-yellow: #df8e1d;
-  --accent-mauve: #8839ef;
-  --accent-maroon: #e64553;
-  --accent-flamingo: #dd7878;
+  --accent-red: #e78284;
+  --accent-peach: #ef9f76;
+  --accent-green: #a6d189;
+  --accent-teal: #81c8be;
+  --accent-blue: #8caaee;
+  --accent-sky: #99d1db;
+  --accent-lavender: #babbf1;
+  --accent-yellow: #e5c890;
+  --accent-mauve: #ca9ee6;
+  --accent-maroon: #ea999c;
+  --accent-flamingo: #eebebe;
   
   /* AQI Stoplight Colors */
-  --aqi-good: #40a02f;           /* Green */
-  --aqi-moderate: #df8e1d;        /* Yellow/Orange */
-  --aqi-unhealthy-sensitive: #fe640b; /* Orange */
-  --aqi-unhealthy: #d20f39;       /* Red */
-  --aqi-very-unhealthy: #8839ef;  /* Purple */
-  --aqi-hazardous: #1a1a1a;       /* Black */
+  --aqi-good: #a6d189;           /* Green */
+  --aqi-moderate: #e5c890;        /* Yellow */
+  --aqi-unhealthy-sensitive: #ef9f76; /* Peach */
+  --aqi-unhealthy: #e78284;       /* Red */
+  --aqi-very-unhealthy: #ca9ee6;  /* Mauve */
+  --aqi-hazardous: #232634;       /* Crust (dark) */
   
   /* Pressure Trend Colors */
-  --pressure-rising: #dd7878;     /* Flamingo (pink) */
-  --pressure-steady: #9ca0b0;     /* Light gray */
-  --pressure-falling: #fe640b;    /* Peach (orange) */
+  --pressure-rising: #eebebe;     /* Flamingo (pink) */
+  --pressure-steady: #838ba7;     /* Light gray */
+  --pressure-falling: #ef9f76;    /* Peach (orange) */
   
   /* PST Time Accent Color - Variable for local tweaking */
-  --pst-accent: #8839ef;          /* Mauve - can be changed locally */
+  --pst-accent: #ca9ee6;          /* Mauve - can be changed locally */
   
   /* ============================================
      VIEWPORT-RELATIVE TYPOGRAPHY
@@ -50,7 +59,7 @@
      ============================================ */
   
   /* Tiny labels (timestamps, details) */
-  --size-tiny: clamp(14px, 1vw, 20px);
+  --size-tiny: clamp(18px, 1vw, 20px);
   
   /* Small text (subtitles, secondary info) */
   --size-small: clamp(18px, 1.5vw, 24px);
@@ -76,7 +85,8 @@
   --line-height-loose: 1.8;
   
   /* Font Family */
-  --font-family: 'Courier New', monospace;
+  --font-family: '0xProto Nerd Font', monospace;
+  /*--font-family: 'Fira Code', 'Courier New', monospace;*/
 }
 
 /* ============================================
@@ -161,7 +171,7 @@ code, pre {
 
 button {
   background: var(--accent-blue);
-  color: white;
+  color: var(--frappe-base);
   border: none;
   padding: 12px 24px;
   border-radius: 6px;
@@ -185,14 +195,14 @@ input, textarea, select {
   padding: 12px;
   border: 2px solid var(--accent-sky);
   border-radius: 6px;
-  background: var(--latte-base);
+  background: var(--frappe-base);
   color: var(--text-primary);
 }
 
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--accent-blue);
-  box-shadow: 0 0 0 3px rgba(30, 102, 245, 0.1);
+  box-shadow: 0 0 0 3px rgba(140, 170, 238, 0.2);
 }
 
 /* ============================================
