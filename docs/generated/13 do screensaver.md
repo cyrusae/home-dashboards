@@ -255,8 +255,6 @@ setTimeout(() => dashboardScreensaver.triggerScreensaver(), 2000);
 1. ✅ Put screensaver files in `src/screensaver/`
 2. ✅ Convert to ES modules OR use script tags in `<head>`
 3. ✅ Initialize in `index.html` after dashboard loads
-4. ✅ Update colors to Frappé to match your theme
-5. ✅ Test with short timeout, then set back to 3 hours
 
 **My vote: ES modules** (cleaner, consistent with your existing code)
 
