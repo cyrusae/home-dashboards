@@ -1,16 +1,17 @@
 /**
  * Dashboard Screensaver Integration
  * 
- * Complete example of using the StarfieldScreensaver with idle detection
- * Add this to your dashboard page or adapt as needed
+ * Integrates StarfieldScreensaver with idle detection
+ * - Triggers after 3 hours of inactivity
+ * - Displays for 30 seconds to prevent burn-in
+ * - Only runs when NOT on night dashboard (to avoid interrupting sleep)
  */
 
-import { Dashboard } from "../../dashboards/night/night.js";
-import { StarfieldScreensaver } from "./screensaver.js";
+import { StarfieldScreensaver } from './screensaver.js';
 
 class DashboardScreensaver {
   constructor(options = {}) {
-    this.idleThreshold = options.idleThreshold || 3 * 60 * 60 * 1000; // 3 hours
+    this.idleThreshold = options.idleThreshold || 3 * 60 * 60 * 1000; // 3 hours default
     this.lastActivityTime = Date.now();
     this.idleCheckInterval = null;
     this.screensaver = null;
@@ -57,14 +58,27 @@ class DashboardScreensaver {
     }
   }
 
+  /**
+   * Check if we're currently on the night dashboard
+   * @returns {boolean} True if night dashboard is active
+   */
+  isNightDashboard() {
+    return !!document.querySelector('night-dashboard');
+  }
+
   startIdleCheck() {
     // Check every minute if we've hit the idle threshold
     this.idleCheckInterval = setInterval(() => {
       const timeSinceActivity = Date.now() - this.lastActivityTime;
 
+      // Only trigger if:
+      // 1. We've been idle long enough
+      // 2. Screensaver isn't already running
+      // 3. We're NOT on the night dashboard
       if (
         timeSinceActivity > this.idleThreshold &&
-        !this.isScreensaverActive
+        !this.isScreensaverActive &&
+        !this.isNightDashboard()
       ) {
         this.triggerScreensaver();
       }
@@ -73,7 +87,7 @@ class DashboardScreensaver {
 
   async triggerScreensaver() {
     this.isScreensaverActive = true;
-    console.log('Screensaver triggered');
+    console.log('🌟 Screensaver triggered (burn-in prevention)');
 
     try {
       await this.screensaver.trigger();
@@ -83,6 +97,7 @@ class DashboardScreensaver {
       this.isScreensaverActive = false;
       // Reset the idle timer for the next cycle
       this.lastActivityTime = Date.now();
+      console.log('✓ Screensaver completed');
     }
   }
 
@@ -100,27 +115,14 @@ class DashboardScreensaver {
   }
 }
 
-// Initialize when DOM is ready
-let dashboardScreensaver;
-
-//if (document.readyState === 'loading') {
-//  document.addEventListener('DOMContentLoaded', () => {
-//    dashboardScreensaver = new DashboardScreensaver({
-//      idleThreshold: 3 * 60 * 60 * 1000, // 3 hours
-//    });
-//  });
-//} else {
-  // DOM already loaded
-//  dashboardScreensaver = new DashboardScreensaver({
-//    idleThreshold: 3 * 60 * 60 * 1000, // 3 hours
-//  });
-//}
-
-// For testing: uncomment to trigger immediately
-// setTimeout(() => dashboardScreensaver.triggerScreensaver(), 2000);
-
+/**
+ * Initialize screensaver with options
+ * @param {Object} options - Configuration options
+ * @param {number} options.idleThreshold - Time in ms before triggering (default: 3 hours)
+ * @returns {DashboardScreensaver} Screensaver instance
+ */
 export function initScreensaver(options = {}) {
- return new DashboardScreensaver(options);
+  return new DashboardScreensaver(options);
 }
 
 export { DashboardScreensaver };
