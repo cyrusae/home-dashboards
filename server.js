@@ -19,19 +19,28 @@ const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(express.json());
-// Serve static files from root (for HTML, CSS, JS in src/)
-app.use(express.static(__dirname, {
-  setHeaders: (res, path) => {
-    // Ensure correct MIME types
-    if (path.endsWith('.js')) {
-      res.setHeader('Content-Type', 'application/javascript');
-    } else if (path.endsWith('.css')) {
-      res.setHeader('Content-Type', 'text/css');
-    } else if (path.endsWith('.json')) {
-      res.setHeader('Content-Type', 'application/json');
+
+// Static file serving - different for dev vs production
+if (NODE_ENV === 'production') {
+  // In production, serve the Vite build output
+  app.use(express.static(path.join(__dirname, 'dist')));
+} else {
+  // In development, serve source files directly
+  // (Vite dev server will actually handle frontend, but this is fallback)
+  app.use(express.static(__dirname, {
+    setHeaders: (res, path) => {
+      // Ensure correct MIME types
+      if (path.endsWith('.js')) {
+        res.setHeader('Content-Type', 'application/javascript');
+      } else if (path.endsWith('.css')) {
+        res.setHeader('Content-Type', 'text/css');
+      } else if (path.endsWith('.json')) {
+        res.setHeader('Content-Type', 'application/json');
+      }
     }
-  }
-}));
+  }));
+}
+
 // Serve public folder (for any generated files)
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -359,14 +368,21 @@ app.get('/health', (req, res) => {
 // STATIC FILES & SPA FALLBACK
 // ============================================
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+if (NODE_ENV === 'production') {
+  // SPA fallback: serve index.html for unknown routes in production
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
+} else {
+  // In development, serve index.html from root
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+  });
 
-// SPA fallback: serve index.html for unknown routes
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
-});
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+  });
+}
 
 // ============================================
 // SERVER START
@@ -381,6 +397,13 @@ app.listen(PORT, () => {
 Environment: ${NODE_ENV}
 Port: ${PORT}
 URL: http://localhost:${PORT}
+
+${NODE_ENV === 'development' ? `
+Development Mode:
+  Backend API: http://localhost:${PORT}
+  Frontend (Vite): http://localhost:5173
+  Run: npm run dev:all
+` : ''}
 
 API Endpoints:
   GET  /api/config              (development only)
@@ -397,8 +420,8 @@ Configuration Status:
 Local Development:
   cp .env.example .env
   # Edit .env with your credentials
-  npm run dev
-  # Open http://localhost:${PORT}
+  npm run dev:all
+  # Open http://localhost:5173 (Vite with HMR)
   `);
 });
 
