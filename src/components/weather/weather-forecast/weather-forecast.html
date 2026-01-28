@@ -1,0 +1,35 @@
+<!-- weather-forecast.html
+     Used by: src/components/weather-forecast/weather-forecast.js
+     Displays hourly weather forecast table for today with wttr.in-inspired styling
+-->
+<div class="weather-right">
+  <div class="forecast-section">
+    <table class="forecast-table">
+      <thead>
+        <tr>
+          <th>Time</th>
+          <th>Temp</th>
+          <th></th>
+          <th>Rain</th>
+          <th>Pressure</th>
+        </tr>
+      </thead>
+      <tbody id="forecastBody">
+        <tr>
+          <td colspan="5" style="text-align: center; color: var(--text-light); font-style: italic;">Loading forecast...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Template for a single forecast row -->
+<template id="forecastRowTemplate">
+  <tr>
+    <td data-time></td>
+    <td data-temp></td>
+    <td class="icon" data-icon></td>
+    <td class="rain-prob" data-precip></td>
+    <td data-pressure></td>
+  </tr>
+</template>
