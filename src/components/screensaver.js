@@ -250,6 +250,8 @@ class StarfieldScreensaver {
 }
 
 // Export for use
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = StarfieldScreensaver;
-}
+//if (typeof module !== 'undefined' && module.exports) {
+//  module.exports = StarfieldScreensaver;
+//}
+
+export { StarfieldScreensaver }

@@ -5,6 +5,8 @@
  * Add this to your dashboard page or adapt as needed
  */
 
+import { Dashboard } from "../dashboards/night";
+
 class DashboardScreensaver {
   constructor(options = {}) {
     this.idleThreshold = options.idleThreshold || 3 * 60 * 60 * 1000; // 3 hours
@@ -101,11 +103,11 @@ class DashboardScreensaver {
 let dashboardScreensaver;
 
 //if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    dashboardScreensaver = new DashboardScreensaver({
-      idleThreshold: 3 * 60 * 60 * 1000, // 3 hours
-    });
-  });
+//  document.addEventListener('DOMContentLoaded', () => {
+//    dashboardScreensaver = new DashboardScreensaver({
+//      idleThreshold: 3 * 60 * 60 * 1000, // 3 hours
+//    });
+//  });
 //} else {
   // DOM already loaded
 //  dashboardScreensaver = new DashboardScreensaver({
@@ -115,3 +117,9 @@ let dashboardScreensaver;
 
 // For testing: uncomment to trigger immediately
 // setTimeout(() => dashboardScreensaver.triggerScreensaver(), 2000);
+
+export function initScreensaver(options = {}) {
+ return new DashboardScreensaver(options);
+}
+
+export { DashboardScreensaver };
