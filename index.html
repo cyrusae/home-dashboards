@@ -54,7 +54,7 @@
 
                 // Initialize screensaver (3-hour idle, skips night dashboard)
                 console.log('Initializing screensaver...');
-                const screensaver = initScreensaver({
+                window.dashboardScreensaver = initScreensaver({
                     idleThreshold: 3 * 60 * 60 * 1000, // 3 hours
                 });
                 console.log('✓ Screensaver ready (triggers after 3 hours idle)');

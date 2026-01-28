@@ -38,12 +38,15 @@ class Weather3Day extends DashboardComponent {
   }
 
   updateDaily(daily) {
-    const container = this.query('#dailyContainer');
-    
-    if (!daily || daily.length === 0) {
-      container.innerHTML = '<div style="color: var(--text-light); font-style: italic; padding: 10px;">No forecast available</div>';
-      return;
-    }
+   
+  console.log('Received daily forecast data:', daily);
+  
+  const container = this.query('#dailyContainer');
+  
+  if (!daily || daily.length === 0) {
+    container.innerHTML = '<div style="color: var(--text-light); font-style: italic; padding: 10px;">No forecast available</div>';
+    return;
+  }
 
     // Clear container
     container.innerHTML = '';
@@ -56,12 +59,16 @@ class Weather3Day extends DashboardComponent {
   }
 
   createDayCard(day) {
-    const template = this.query('#dayCardTemplate');
-    const card = template.content.cloneNode(true);
+//  console.log('Creating card for day:', day);
+  
+  const template = this.query('#dayCardTemplate');
+  const card = template.content.cloneNode(true);
 
-    // Format date
-    const date = new Date(day.date);
-    const dayName = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+  // Format date
+  const date = new Date(day.date);
+  const dayName = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC'});
+
+//  console.log('Formatted as:', dayName);
 
     // Populate data
     card.querySelector('[data-day-date]').textContent = dayName;

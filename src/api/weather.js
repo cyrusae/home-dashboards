@@ -91,9 +91,12 @@ export async function getWeather(location, apiKey) {
   }
 
   // Convert to array, filter out today, take next 3 days
-  const today = new Date().toISOString().split('T')[0];
-  const dailyDates = Object.keys(dailyMap).sort();
-  const futureDates = dailyDates.filter(date => date > today);
+ const today = now.toISOString().split('T')[0];
+ const dailyDates = Object.keys(dailyMap).sort();
+// console.log('Today:', today);
+// console.log('Daily dates:', dailyDates);
+ const futureDates = dailyDates.filter(date => date > today);
+// console.log('Future dates:', futureDates);
 
   for (let i = 0; i < Math.min(3, futureDates.length); i++) {
     const day = dailyMap[futureDates[i]];
