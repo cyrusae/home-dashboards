@@ -1,0 +1,79 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dashboard-ingress
+  namespace: dashboards
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+spec:
+  ingressClassName: traefik
+  tls:
+  - hosts:
+    - dash.dawnfire.casa
+    - morning.dawnfire.casa
+    secretName: dashboard-tls
+  rules:
+  # Primary domain
+  - host: dash.dawnfire.casa
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: dashboard-service
+            port:
+              number: 80
+  
+  # Legacy redirect (optional - for backwards compatibility)
+  - host: morning.dawnfire.casa
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: dashboard-service
+            port:
+              number: 80
+---
+# Optional: Middleware for redirecting morning.dawnfire.casa -> dash.dawnfire.casa/?dashboard=morning
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: morning-redirect
+  namespace: dashboards
+spec:
+  redirectRegex:
+    regex: "^https://morning\\.dawnfire\\.casa(.*)"
+    replacement: "https://dash.dawnfire.casa/?dashboard=morning"
+    permanent: true
+---
+# Apply middleware to morning subdomain
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dashboard-ingress-morning-redirect
+  namespace: dashboards
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    traefik.ingress.kubernetes.io/router.middlewares: "dashboards-morning-redirect@kubernetescrd"
+spec:
+  ingressClassName: traefik
+  tls:
+  - hosts:
+    - morning.dawnfire.casa
+    secretName: dashboard-tls
+  rules:
+  - host: morning.dawnfire.casa
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: dashboard-service
+            port:
+              number: 80

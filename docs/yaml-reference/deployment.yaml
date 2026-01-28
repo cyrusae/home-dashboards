@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+  namespace: dashboards
+  labels:
+    app: dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      initContainers:
+      - name: config-generator
+        image: busybox:1.36
+        command: ["/bin/sh", "/scripts/init-config.sh"]
+        envFrom:
+        - secretRef:
+            name: dashboard-secrets
+        volumeMounts:
+        - name: init-script
+          mountPath: /scripts
+        - name: public-config
+          mountPath: /app/public
+      
+      containers:
+      - name: dashboard
+        image: registry.dawnfire.casa/dashboard:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+          name: http
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: PORT
+          value: "3000"
+        volumeMounts:
+        - name: public-config
+          mountPath: /app/public
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      
+      volumes:
+      - name: init-script
+        configMap:
+          name: dashboard-init-script
+          defaultMode: 0755
+      - name: public-config
+        emptyDir: {}
+      
+      restartPolicy: Always
