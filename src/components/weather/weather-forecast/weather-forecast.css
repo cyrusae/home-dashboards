@@ -1,0 +1,48 @@
+/* weather-forecast.css */
+@import '/src/styles/theme.css';
+
+.weather-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+.forecast-section {
+  background: rgba(153, 209, 219, 0.05);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.forecast-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--size-tiny);
+  font-family: var(--font-family);
+}
+
+.forecast-table thead th {
+  color: var(--text-secondary);
+  text-align: left;
+  padding: 10px;
+  border-bottom: 1px solid var(--frappe-crust);
+  font-weight: bold;
+}
+
+.forecast-table tbody td {
+  padding: 10px;
+  border-bottom: 1px solid var(--frappe-crust);
+  color: var(--text-primary);
+}
+
+.forecast-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.icon {
+  font-size: 20px;
+}
+
+.rain-prob {
+  color: var(--accent-blue);
+}

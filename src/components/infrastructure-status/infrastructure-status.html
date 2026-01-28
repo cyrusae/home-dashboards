@@ -1,0 +1,52 @@
+<!-- infrastructure-status.html
+     Used by: src/components/infrastructure-status/infrastructure-status.js
+     Displays K3s cluster health status for 3 nodes with real-time metrics
+     from Prometheus (CPU, memory, pods, status indicators)
+-->
+<div class="infrastructure-grid" id="infrastructureGrid">
+  <div style="color: var(--text-light); font-style: italic; padding: 10px;">Loading cluster status...</div>
+</div>
+
+<!-- Template for node down/error state -->
+<template id="nodeDownTemplate">
+  <div class="node-card">
+    <div class="node-name" data-node-name></div>
+    <div class="node-status">
+      <span class="status-indicator" data-status-class></span>
+      <span data-status-text></span>
+    </div>
+  </div>
+</template>
+
+<!-- Template for node up state -->
+<template id="nodeUpTemplate">
+  <div class="node-card">
+    <div class="node-name" data-node-name></div>
+    <div class="node-status">
+      <span class="status-indicator up"></span>
+      Online
+    </div>
+    <div class="metric-row">
+      <span class="metric-label">CPU</span>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <span class="metric-value" data-cpu-value></span>
+        <div class="metric-bar">
+          <div class="metric-bar-fill" data-cpu-bar></div>
+        </div>
+      </div>
+    </div>
+    <div class="metric-row">
+      <span class="metric-label">Memory</span>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <span class="metric-value" data-memory-value></span>
+        <div class="metric-bar">
+          <div class="metric-bar-fill" data-memory-bar></div>
+        </div>
+      </div>
+    </div>
+    <div class="metric-row">
+      <span class="metric-label">Pods</span>
+      <span class="metric-value" data-pods-value></span>
+    </div>
+  </div>
+</template>

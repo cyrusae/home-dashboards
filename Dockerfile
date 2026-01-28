@@ -5,16 +5,17 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install dependencies (production only)
-RUN npm ci --only=production
+# Install ALL dependencies (including devDependencies for build)
+RUN npm ci
 
 # Copy application files
-COPY server.js .
-COPY index.html .
-COPY src/ ./src/
+COPY . .
 
-# Create placeholder for K3s init container to mount config.js
-RUN mkdir -p /app/public && echo '// config.js - will be mounted by K3s' > /app/public/config.js
+# Build frontend with Vite
+RUN npm run build
+
+# Remove devDependencies after build to reduce image size
+RUN npm prune --production
 
 # Expose port
 EXPOSE 3000
@@ -23,5 +24,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
 
-# Start server
+# Start server (serves dist/ folder in production)
 CMD ["node", "server.js"]

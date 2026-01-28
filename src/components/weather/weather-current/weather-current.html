@@ -1,0 +1,36 @@
+<!-- weather-current.html
+     Used by: src/components/weather-current/weather-current.js
+     Displays current weather conditions with temperature, humidity, wind,
+     pressure trend, and sunrise/sunset times
+-->
+<div class="weather-left">
+  <div class="current-temp" id="currentTemp">--°F</div>
+  <div class="current-condition" id="currentCondition">Loading...</div>
+  <div class="divider"></div>
+  <div class="detail-row">
+    <span class="label">Humidity:</span>
+    <span class="value" id="humidity">--%</span>
+  </div>
+  <div class="detail-row">
+    <span class="label">Wind:</span>
+    <span class="value" id="wind">-- mph</span>
+  </div>
+  <div class="detail-row" id="aqiRow" style="display: none;">
+    <span class="label">AQI:</span>
+    <span class="value aqi" id="aqiDot">●</span>
+    <span class="value" id="aqiLabel">--</span>
+  </div>
+  <div class="detail-row">
+    <span class="label">Pressure:</span>
+    <span class="value" id="pressure">-- hPa</span>
+  </div>
+  <div class="detail-row">
+    <span class="label">Trend:</span>
+    <span class="value trend" id="pressureTrend">--</span>
+  </div>
+  <div class="divider"></div>
+  <div class="detail-row">
+    <span class="sunrise" id="sunrise">🌅 --:--</span>
+    <span class="sunset" id="sunset">🌇 --:--</span>
+  </div>
+</div>

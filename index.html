@@ -21,12 +21,12 @@
         </div>
     </div>
 
-    <!-- Components will be loaded here -->
+    <!-- Dashboard initialization with screensaver -->
     <script type="module">
         // Load config manager first
         import './src/config-manager.js';
-        import { loadDashboard } from './src/dashboard-router.js';
-        import { initScreensaver } from './src/components/screensaver-controller.js';
+        import { initializeDashboardRouter } from './src/dashboard-router.js';
+        import { initScreensaver } from './src/components/screensaver/screensaver-controller.js';
 
         // Wait for config to be ready
         async function initializeDashboard() {
@@ -47,19 +47,18 @@
                 console.log('✓ Configuration ready');
                 window.configManager.debugStatus();
 
-                // Load the appropriate dashboard
-                const dashboard = new URLSearchParams(window.location.search).get('dashboard') || 'morning' || 'night';
+                // Initialize dashboard with time-based routing
+                console.log('Initializing dashboard router...');
+                const dashboardName = await initializeDashboardRouter();
+                console.log(`✓ Dashboard loaded: ${dashboardName}`);
 
-                //TODO: Add time-based switching
-                console.log(`Loading dashboard: ${dashboard}`);
-                
-                await loadDashboard(dashboard);
-                console.log(`✓ Dashboard loaded: ${dashboard}`);
-
+                // Initialize screensaver (3-hour idle, skips night dashboard)
+                console.log('Initializing screensaver...');
                 window.dashboardScreensaver = initScreensaver({
-                 idleThreshold: 3 * 60 * 60 * 1000, //3 hours
+                    idleThreshold: 3 * 60 * 60 * 1000, // 3 hours
                 });
-                console.log('Screensaver initialized');
+                console.log('✓ Screensaver ready (triggers after 3 hours idle)');
+
             } catch (error) {
                 console.error('Failed to initialize dashboard:', error);
                 document.getElementById('app').innerHTML = `
@@ -80,7 +79,8 @@
                         <pre style="background: #fff; padding: 10px; border-radius: 4px; overflow-x: auto;">cp .env.example .env
 # Edit .env with your API keys and passwords
 npm install
-npm run dev</pre>
+npm run dev:all
+# Open http://localhost:5173</pre>
                         <p style="margin-top: 15px;"><strong>Production (K3s):</strong></p>
                         <pre style="background: #fff; padding: 10px; border-radius: 4px; overflow-x: auto;">kubectl logs -n dashboards deployment/morning-dashboard
 # Check if init container created config.js</pre>

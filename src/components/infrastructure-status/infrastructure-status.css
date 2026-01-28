@@ -1,0 +1,120 @@
+/* infrastructure-status.css */
+@import '/src/styles/theme.css';
+
+.infrastructure-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  height: 100%;
+}
+
+.node-card {
+  border: 2px solid;
+  padding: 20px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+.node-card.healthy {
+  border-color: var(--accent-green);
+  background: rgba(166, 209, 137, 0.1);
+}
+
+.node-card.warning {
+  border-color: var(--accent-yellow);
+  background: rgba(229, 200, 144, 0.1);
+}
+
+.node-card.critical {
+  border-color: var(--accent-red);
+  background: rgba(231, 130, 132, 0.1);
+}
+
+.node-name {
+  font-weight: bold;
+  font-size: var(--size-heading);
+  color: var(--text-primary);
+  text-transform: capitalize;
+}
+
+.node-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--size-body);
+  font-weight: bold;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.status-indicator.up {
+  background: var(--accent-green);
+}
+
+.status-indicator.down {
+  background: var(--accent-red);
+}
+
+.status-indicator.error {
+  background: var(--accent-yellow);
+}
+
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--size-body);
+  padding: 6px 0;
+}
+
+.metric-label {
+  color: var(--text-light);
+  flex: 1;
+}
+
+.metric-value {
+  color: var(--text-primary);
+  font-weight: bold;
+  min-width: 60px;
+  text-align: right;
+}
+
+.metric-bar {
+  width: 60px;
+  height: 4px;
+  background: var(--frappe-crust);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-left: 10px;
+}
+
+.metric-bar-fill {
+  height: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.metric-bar-fill.normal {
+  background: var(--accent-green);
+}
+
+.metric-bar-fill.warning {
+  background: var(--accent-yellow);
+}
+
+.metric-bar-fill.critical {
+  background: var(--accent-red);
+}
+
+@media (max-width: 1200px) {
+  .infrastructure-grid {
+    grid-template-columns: 1fr;
+  }
+}

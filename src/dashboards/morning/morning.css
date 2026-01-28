@@ -1,0 +1,224 @@
+/* morning.css */
+@import '/src/styles/theme.css';
+
+:host {
+  display: block;
+  width: 100%;
+  height: 100%;
+  flex: 1;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr 1fr;
+  gap: 30px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.row-1 {
+  grid-column: 1;
+  grid-row: 1;
+  min-height: 300px;
+}
+
+.row-2 {
+  grid-column: 1;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr;
+  gap: 30px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.weather-current-container {
+  border: 3px solid var(--accent-sky);
+  background: rgba(153, 209, 219, 0.1);
+  padding: 30px;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.weather-details-column {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 30px;
+  min-height: 0;
+}
+
+.weather-forecast-container,
+.weather-3day-container {
+  border: 3px solid var(--accent-sky);
+  background: rgba(153, 209, 219, 0.1);
+  padding: 30px;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.weather-forecast-container > .section-title,
+.weather-3day-container > .section-title {
+  margin-bottom: 15px;
+}
+
+weather-current {
+  flex: 1;
+  overflow-y: auto;
+  padding-left: 15px;
+}
+
+weather-forecast {
+  flex: 1;
+  overflow-y: auto;
+}
+
+weather-3day {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.row-3 {
+  grid-column: 1;
+  grid-row: 3;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.section-title {
+  font-weight: bold;
+  font-size: var(--size-small);
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-family: var(--font-family);
+}
+
+.calendar-container,
+.tasks-container,
+.infrastructure-container {
+  border: 3px solid var(--accent-sky);
+  background: rgba(153, 209, 219, 0.1);
+  padding: 30px;
+  border-radius: 6px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.calendar-container {
+  border-color: var(--accent-lavender);
+  background: rgba(186, 187, 241, 0.1);
+}
+
+.tasks-container {
+  border-color: var(--accent-teal);
+  background: rgba(129, 200, 190, 0.1);
+}
+
+.infrastructure-container {
+  border-color: var(--accent-lavender);
+  background: rgba(186, 187, 241, 0.1);
+}
+
+#calendar-content,
+#tasks-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.events-list,
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.event-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background: rgba(186, 187, 241, 0.05);
+  border-left: 3px solid var(--accent-lavender);
+  border-radius: 4px;
+}
+
+.event-time {
+  font-size: var(--size-small);
+  color: var(--text-light);
+  font-weight: bold;
+}
+
+.event-title {
+  font-size: var(--size-body);
+  color: var(--text-primary);
+}
+
+.event-calendar {
+  font-size: var(--size-tiny);
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  font-size: var(--size-body);
+  color: var(--text-primary);
+}
+
+.task-icon {
+  color: var(--accent-teal);
+  font-size: var(--size-heading);
+  line-height: 1;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+@media (max-width: 1200px) {
+  .row-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .row-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard {
+    grid-template-rows: auto auto auto auto auto;
+  }
+
+  .row-2 {
+    grid-row: 2;
+  }
+
+  .row-3 {
+    grid-row: 3;
+  }
+}

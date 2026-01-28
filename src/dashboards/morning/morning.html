@@ -1,0 +1,64 @@
+<!-- morning.html
+     Used by: src/dashboards/morning/morning.js
+     Morning dashboard layout with 3-row grid structure:
+     - Row 1: Time display (date/EST + PST time)
+     - Row 2: Weather sections (current, forecast, 3-day) + Calendar
+     - Row 3: Morning routine tasks + Infrastructure status
+-->
+<div class="dashboard">
+  <!-- Row 1: Date/EST (50%) | PST Time (50%) -->
+  <div class="row-1">
+    <time-display></time-display>
+  </div>
+
+  <!-- Row 2: Weather (current full row | today forecast + 3day stacked) -->
+  <div class="row-2">
+    <div class="weather-current-container">
+      <div class="section-title" style="color: var(--accent-sky);">🌤️ Now</div>
+      <weather-current></weather-current>
+    </div>
+    <div class="weather-details-column">
+      <div class="weather-forecast-container">
+        <div class="section-title" style="color: var(--accent-sky);">📊 Today</div>
+        <weather-forecast></weather-forecast>
+      </div>
+      <div class="weather-3day-container">
+        <div class="section-title" style="color: var(--accent-sky);">📅 Next 3 Days</div>
+        <weather-3day></weather-3day>
+      </div>
+    </div>
+    <div class="calendar-container">
+      <div class="section-title" style="color: var(--accent-lavender);">📅 Today's Events</div>
+      <div id="calendar-content">Loading events...</div>
+    </div>
+  </div>
+
+  <!-- Row 3: Tasks (33%) | Infrastructure (66%) -->
+  <div class="row-3">
+    <div class="tasks-container">
+      <div class="section-title" style="color: var(--accent-teal);">✓ Morning Routine</div>
+      <div id="tasks-content">Loading...</div>
+    </div>
+    <div class="infrastructure-container">
+      <div class="section-title" style="color: var(--accent-lavender);">🖥️ Infrastructure</div>
+      <infrastructure-status></infrastructure-status>
+    </div>
+  </div>
+</div>
+
+<!-- Template for calendar event items -->
+<template id="eventTemplate">
+  <div class="event-item">
+    <div class="event-time" data-event-time></div>
+    <div class="event-title" data-event-title></div>
+    <div class="event-calendar" data-event-calendar></div>
+  </div>
+</template>
+
+<!-- Template for task items -->
+<template id="taskTemplate">
+  <div class="task-item">
+    <span class="task-icon">↦</span>
+    <span data-task-text></span>
+  </div>
+</template>
