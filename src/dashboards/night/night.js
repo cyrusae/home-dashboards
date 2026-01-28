@@ -5,7 +5,7 @@
  *   - Simple insomnia checklist in dark red
  */
 
-import { DashboardComponent } from '../components/base.js';
+import { DashboardComponent } from '../../components/base.js';
 
 class Dashboard extends DashboardComponent {
   constructor() {

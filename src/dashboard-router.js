@@ -13,7 +13,7 @@ async function loadDashboard(dashboardName) {
     
     switch (dashboardName) {
       case 'morning':
-        dashboardModule = await import('./dashboards/morning.js');
+        dashboardModule = await import('./dashboards/morning/morning.js');
         break;
       case 'afternoon':
         dashboardModule = await import('./dashboards/afternoon.js');
@@ -22,7 +22,7 @@ async function loadDashboard(dashboardName) {
         dashboardModule = await import('./dashboards/evening.js');
         break;
       case 'night':
-        dashboardModule = await import('./dashboards/night.js');
+        dashboardModule = await import('./dashboards/night/night.js');
         break;
       case 'tv':
         dashboardModule = await import('./dashboards/tv.js');
