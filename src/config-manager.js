@@ -4,6 +4,16 @@
  * 1. Production: window.__DASHBOARD_CONFIG__ (injected by K3s init container)
  * 2. Development: /api/config endpoint (served by Express backend reading .env)
  */
+// Dynamically inject config.js script tag (prevents Vite from stripping it)
+(function injectConfigScript() {
+  const script = document.createElement('script');
+  script.src = '/config.js';
+  script.async = false; // Load synchronously before other scripts
+  script.onerror = () => {
+    console.warn('⚠️ config.js not found - will try backend endpoint');
+  };
+  document.head.insertBefore(script, document.head.firstChild);
+})();
 
 class ConfigManager {
   constructor() {
