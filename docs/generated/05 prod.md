@@ -324,7 +324,7 @@ spec:
       
       containers:
       - name: dashboard
-        image: babbage:5000/dashboard:latest
+        image: registry.dawnfire.casa/dashboard:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
