@@ -15,18 +15,18 @@ async function loadDashboard(dashboardName) {
       case 'morning':
         dashboardModule = await import('./dashboards/morning/morning.js');
         break;
-      case 'afternoon':
-        dashboardModule = await import('./dashboards/afternoon.js');
+//      case 'afternoon':
+//        dashboardModule = await import('./dashboards/afternoon.js');
         break;
-      case 'evening':
-        dashboardModule = await import('./dashboards/evening.js');
-        break;
+//      case 'evening':
+//        dashboardModule = await import('./dashboards/evening.js');
+//        break;
       case 'night':
         dashboardModule = await import('./dashboards/night/night.js');
         break;
-      case 'tv':
-        dashboardModule = await import('./dashboards/tv.js');
-        break;
+//      case 'tv':
+//        dashboardModule = await import('./dashboards/tv.js');
+//        break;
       default:
         throw new Error(`Unknown dashboard: ${dashboardName}`);
     }
