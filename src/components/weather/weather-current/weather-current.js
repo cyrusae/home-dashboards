@@ -4,7 +4,7 @@
  * pressure trend, and sunrise/sunset times
  */
 
-import { DashboardComponent } from '../base.js';
+import { DashboardComponent } from '../../base.js';
 import html from './weather-current.html?raw';
 import styles from './weather-current.css?raw';
 

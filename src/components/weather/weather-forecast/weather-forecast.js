@@ -3,7 +3,7 @@
  * Displays hourly weather forecast table for today
  */
 
-import { DashboardComponent } from '../base.js';
+import { DashboardComponent } from '../../base.js';
 import html from './weather-forecast.html?raw';
 import styles from './weather-forecast.css?raw';
 

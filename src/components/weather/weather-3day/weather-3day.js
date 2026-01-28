@@ -3,7 +3,7 @@
  * Shows high/low temps, precipitation, pressure, and conditions for next 3 days
  */
 
-import { DashboardComponent } from '../base.js';
+import { DashboardComponent } from '../../base.js';
 import html from './weather-3day.html?raw';
 import styles from './weather-3day.css?raw';
 
