@@ -1,0 +1,72 @@
+/* time-display.css */
+@import '/src/styles/theme.css';
+
+.time-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  grid-row: 1;
+  height: auto;
+}
+
+.row-1-left {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  gap: 30px;
+}
+
+.date-box {
+  border: 3px solid var(--accent-maroon);
+  background: rgba(234, 153, 156, 0.1);
+  padding: 30px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.est-box {
+  border: 3px solid var(--accent-flamingo);
+  background: rgba(238, 190, 190, 0.1);
+  padding: 30px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.row-1-right {
+  border: none;
+  background: transparent;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.date-display {
+  font-size: clamp(40px, 6vw, 60px);
+  font-weight: bold;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  font-family: var(--font-family);
+}
+
+.time-est-display {
+  font-size: clamp(32px, 5vw, 48px);
+  font-weight: bold;
+  color: var(--text-primary);
+  text-align: center;
+  font-family: var(--font-family);
+}
+
+.time-pst {
+  font-size: var(--size-huge);
+  font-weight: bold;
+  font-family: var(--font-family);
+  color: var(--pst-accent);
+  line-height: var(--line-height-tight);
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
