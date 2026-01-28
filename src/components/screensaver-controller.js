@@ -5,7 +5,8 @@
  * Add this to your dashboard page or adapt as needed
  */
 
-import { Dashboard } from "../dashboards/night";
+import { Dashboard } from "../dashboards/night.js";
+import { StarfieldScreensaver } from "./screensaver.js";
 
 class DashboardScreensaver {
   constructor(options = {}) {

@@ -147,7 +147,7 @@ class StarfieldScreensaver {
 
   updateParticles() {
     const centerX = this.canvas.width / 2;
-    const centerY = this.canvas.height / 2;
+    const centerY = this.canvas.height / 2; //why do these exist without being used?
 
     for (let particle of this.particles) {
       // Move particle
@@ -254,4 +254,4 @@ class StarfieldScreensaver {
 //  module.exports = StarfieldScreensaver;
 //}
 
-export { StarfieldScreensaver }
+export { StarfieldScreensaver };
