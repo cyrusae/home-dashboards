@@ -22,26 +22,39 @@ const __dirname = path.dirname(__filename);
 // Middleware
 app.use(express.json());
 
-// Static file serving - different for dev vs production
+// Prevent aggressive browser caching in production
 if (NODE_ENV === 'production') {
-  // In production, serve the Vite build output
-  app.use(express.static(path.join(__dirname, 'dist')));
-} else {
-  // In development, serve source files directly
-  // (Vite dev server will actually handle frontend, but this is fallback)
-  app.use(express.static(__dirname, {
-    setHeaders: (res, path) => {
-      // Ensure correct MIME types
-      if (path.endsWith('.js')) {
-        res.setHeader('Content-Type', 'application/javascript');
-      } else if (path.endsWith('.css')) {
-        res.setHeader('Content-Type', 'text/css');
-      } else if (path.endsWith('.json')) {
-        res.setHeader('Content-Type', 'application/json');
-      }
+  app.use((req, res, next) => {
+    // Don't cache HTML or API responses
+    if (req.path.endsWith('.html') || req.path.startsWith('/api/')) {
+      res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    } else {
+      // Static assets can be cached for 1 hour
+      res.setHeader('Cache-Control', 'public, max-age=3600');
     }
-  }));
+    next();
+  });
 }
+
+// Static file serving
+const staticDir = NODE_ENV === 'production' ? path.join(__dirname, 'dist') : __dirname;
+
+app.use(express.static(staticDir, {
+  setHeaders: (res, filePath) => {
+    // Ensure correct MIME types
+    if (filePath.endsWith('.js')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    } else if (filePath.endsWith('.css')) {
+      res.setHeader('Content-Type', 'text/css');
+    } else if (filePath.endsWith('.json')) {
+      res.setHeader('Content-Type', 'application/json');
+    } else if (filePath.endsWith('.html')) {
+      res.setHeader('Content-Type', 'text/html');
+    }
+  }
+}));
 
 // Serve public folder (for any generated files)
 app.use(express.static(path.join(__dirname, 'public')));
@@ -130,6 +143,20 @@ app.get('/api/prometheus/query', async (req, res) => {
 });
 
 // ============================================
+// VERSION ENDPOINT (for deployment detection)
+// ============================================
+
+app.get('/api/version', (req, res) => {
+  // Use build timestamp or pod start time as version identifier
+  const version = process.env.BUILD_VERSION || new Date().toISOString();
+  res.json({
+    version,
+    environment: NODE_ENV,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// ============================================
 // HEALTH CHECK
 // ============================================
 
@@ -187,6 +214,7 @@ API Endpoints:
   GET  /api/weather             (OpenWeatherMap proxy)
   GET  /api/calendar/events     (CalDAV proxy)
   GET  /api/prometheus/query    (Prometheus proxy)
+  GET  /api/version             (deployment detection)
   GET  /health                  (health check)
 
 Configuration Status:

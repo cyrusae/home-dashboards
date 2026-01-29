@@ -17,6 +17,10 @@ RUN npm run build
 # Remove devDependencies after build to reduce image size
 RUN npm prune --production
 
+# Set build version as environment variable (used by /api/version endpoint)
+ARG BUILD_TIMESTAMP
+ENV BUILD_VERSION=${BUILD_TIMESTAMP:-unknown}
+
 # Expose port
 EXPOSE 3000
 

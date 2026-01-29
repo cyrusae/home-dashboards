@@ -21,12 +21,13 @@
         </div>
     </div>
 
-    <!-- Dashboard initialization with screensaver -->
+    <!-- Dashboard initialization with screensaver and refresh manager -->
     <script type="module">
         // Load config manager first
         import './src/config-manager.js';
         import { initializeDashboardRouter } from './src/dashboard-router.js';
         import { initScreensaver } from './src/components/screensaver/screensaver-controller.js';
+        import './src/refresh-manager.js';
 
         // Wait for config to be ready
         async function initializeDashboard() {
@@ -46,6 +47,11 @@
 
                 console.log('✓ Configuration ready');
                 window.configManager.debugStatus();
+
+                // Initialize refresh manager for automatic updates
+                console.log('Initializing refresh manager...');
+                await window.refreshManager.initialize();
+                console.log('✓ Refresh manager ready');
 
                 // Initialize dashboard with time-based routing
                 console.log('Initializing dashboard router...');
@@ -82,7 +88,7 @@ npm install
 npm run dev:all
 # Open http://localhost:5173</pre>
                         <p style="margin-top: 15px;"><strong>Production (K3s):</strong></p>
-                        <pre style="background: #fff; padding: 10px; border-radius: 4px; overflow-x: auto;">kubectl logs -n dashboards deployment/morning-dashboard
+                        <pre style="background: #fff; padding: 10px; border-radius: 4px; overflow-x: auto;">kubectl logs -n dashboards deployment/dashboard
 # Check if init container created config.js</pre>
                         <p style="margin-top: 15px;">Check browser console (F12) for more details.</p>
                     </div>
