@@ -4,6 +4,23 @@
  * 1. Production: window.__DASHBOARD_CONFIG__ (injected by K3s init container)
  * 2. Development: /api/config endpoint (served by Express backend reading .env)
  */
+// Dynamically inject config.js script tag (prevents Vite from stripping it)
+// Dynamically inject config.js script tag and wait for it to load
+const configScriptLoaded = new Promise((resolve, reject) => {
+  const script = document.createElement('script');
+  // Use window.location to construct absolute URL that Vite won't transform
+  script.src = window.location.origin + '/config.js';
+  script.async = false;
+  script.onload = () => {
+    console.log('✓ config.js loaded successfully');
+    resolve();
+  };
+  script.onerror = (error) => {
+    console.warn('⚠️ config.js not found - will try backend endpoint');
+    resolve(); // Resolve anyway so we can try backend
+  };
+  document.head.insertBefore(script, document.head.firstChild);
+});
 
 class ConfigManager {
   constructor() {
@@ -13,6 +30,9 @@ class ConfigManager {
 
   async initialize() {
     try {
+      // Wait for config.js script to load first
+      await configScriptLoaded;
+      
       // 1. Try production mode: Kubernetes-injected config
       if (window.__DASHBOARD_CONFIG__) {
         console.log('✓ ConfigManager: Using Kubernetes-injected config (production mode)');

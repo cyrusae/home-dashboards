@@ -1,0 +1,10 @@
+npm run build
+docker build -t registry.dawnfire.casa/dashboards:{ver} .
+docker tag registry.dawnfire.casa/dashboards:{ver} registry.dawnfire.casa/dashboards:latest
+docker push registry.dawnfire.casa/dashboards:{ver}
+docker push registry.dawnfire.casa/dashboards:latest
+
+- app uses "latest"
+- prune past uploads manually: `docker rmi img` local
+- how to do pruning on the registry? this might be enough reason to be lazy.
+- `docker images` to see images

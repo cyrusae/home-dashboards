@@ -42,7 +42,14 @@ class WeatherCurrent extends DashboardComponent {
   updateDisplay(current) {
     // Temperature and condition
     this.query('#currentTemp').textContent = `${current.temp}°F`;
-    this.query('#currentCondition').textContent = current.condition;
+    const icons = this.getWeatherIcon(current.condition);
+    this.query('#currentCondition').textContent = `${icons.emoji} ${current.condition}`;
+    
+    // Set background icon (Nerd Font glyph)
+    const container = this.query('.weather-left');
+    if (container) {
+      container.setAttribute('data-icon', icons.nerdFont);
+    }
 
     // Humidity and wind
     this.query('#humidity').textContent = `${current.humidity}%`;
@@ -158,6 +165,51 @@ class WeatherCurrent extends DashboardComponent {
       hour12: true,
       timeZone: 'America/Los_Angeles'
     });
+  }
+
+  getWeatherIcon(condition) {
+    // Emoji for inline display
+    const emoji = {
+      'Clear': '☀️',
+      'Clouds': '☁️',
+      'Rain': '🌧️',
+      'Drizzle': '🌦️',
+      'Thunderstorm': '⛈️',
+      'Snow': '❄️',
+      'Mist': '🌫️',
+      'Smoke': '💨',
+      'Haze': '🌫️',
+      'Dust': '🌪️',
+      'Fog': '🌫️',
+      'Sand': '🌪️',
+      'Ash': '💨',
+      'Squall': '💨',
+      'Tornado': '🌪️',
+    };
+    
+    // Nerd Font glyphs for background (monochrome, from Weather Icons set)
+    const nerdFont = {
+      'Clear': '\ue30d',        // nf-weather-day_sunny
+      'Clouds': '\ue33d',       // nf-weather-cloudy
+      'Rain': '\ue318',         // nf-weather-rain
+      'Drizzle': '\ue319',      // nf-weather-sprinkle
+      'Thunderstorm': '\ue31d', // nf-weather-thunderstorm
+      'Snow': '\ue31a',         // nf-weather-snow
+      'Mist': '\ue313',         // nf-weather-fog
+      'Smoke': '\ue35c',        // nf-weather-smoke
+      'Haze': '\ue313',         // nf-weather-fog
+      'Dust': '\ue35c',         // nf-weather-smoke
+      'Fog': '\ue313',          // nf-weather-fog
+      'Sand': '\ue35c',         // nf-weather-smoke
+      'Ash': '\ue35c',          // nf-weather-smoke
+      'Squall': '\ue34b',       // nf-weather-strong_wind
+      'Tornado': '\ue351',      // nf-weather-tornado
+    };
+    
+    return {
+      emoji: emoji[condition] || '🌤️',
+      nerdFont: nerdFont[condition] || '\ue30d'
+    };
   }
 }
 
