@@ -19,9 +19,12 @@ export async function getCalendarEvents(nextcloudUrl, nextcloudUser, nextcloudPa
     throw new Error('Nextcloud credentials not configured');
   }
 
-  // Determine date range
-  let startDate = new Date();
-  let endDate = new Date();
+  // Determine date range IN PST
+  const now = new Date();
+  const pstNow = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+  
+  let startDate = new Date(pstNow);
+  let endDate = new Date(pstNow);
 
   switch (dateRange) {
     case 'tomorrow':
@@ -195,7 +198,8 @@ function parseICalEvent(icalData) {
 
 /**
  * Parse iCal date string to ISO format
- * @param {string} dateStr - iCal date string
+ * Handles both UTC (ending in Z) and local PST times
+ * @param {string} dateStr - iCal date string (e.g., "20250129T123000" or "20250129T123000Z")
  * @returns {string} ISO date string
  */
 function parseICalDate(dateStr) {
@@ -210,14 +214,25 @@ function parseICalDate(dateStr) {
     const isUTC = dateStr.endsWith('Z');
 
     if (isUTC) {
+      // Already in UTC, convert directly
       return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}Z`).toISOString();
     } else {
-      return new Date(`${year}-${month}-${day}T${hour}:${minute}:${second}`).toISOString();
+      // Assume local time is PST (GMT-8)
+      // Note: This doesn't handle PDT (GMT-7) automatically - you may want to use a library
+      // For now, we'll use a simple offset
+      const localDateStr = `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+      
+      // Create date in PST by adding explicit timezone offset
+      // PST is UTC-8, so we add '-08:00' to the string
+      const pstDate = new Date(localDateStr + '-08:00');
+      return pstDate.toISOString();
     }
   } else {
+    // All-day events - treat as midnight PST
     const year = dateStr.substring(0, 4);
     const month = dateStr.substring(4, 6);
     const day = dateStr.substring(6, 8);
-    return new Date(`${year}-${month}-${day}T00:00:00`).toISOString();
+    const pstDate = new Date(`${year}-${month}-${day}T00:00:00-08:00`);
+    return pstDate.toISOString();
   }
 }

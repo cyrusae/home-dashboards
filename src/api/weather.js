@@ -44,17 +44,23 @@ export async function getWeather(location, apiKey) {
     daily: [],
   };
 
-  // Process hourly forecast (today only)
+  // Process hourly forecast (today only) - use PST timezone
   const now = new Date();
-  const todayEnd = new Date(now);
-  todayEnd.setHours(23, 59, 59, 999);
+  const pstNow = new Date(now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+  
+  // Get end of today in PST
+  const todayEndPST = new Date(pstNow);
+  todayEndPST.setHours(23, 59, 59, 999);
 
   for (let i = 0; i < data.list.length && result.hourly.length < 12; i++) {
     const item = data.list[i];
     const itemTime = new Date(item.dt * 1000);
     
-    // Only include today's hours
-    if (itemTime > now && itemTime <= todayEnd) {
+    // Convert item time to PST for comparison
+    const itemTimePST = new Date(itemTime.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+    
+    // Only include today's hours (in PST)
+    if (itemTimePST > pstNow && itemTimePST <= todayEndPST) {
       result.hourly.push({
         time: itemTime.toISOString(),
         temp: Math.round(item.main.temp),
@@ -67,11 +73,13 @@ export async function getWeather(location, apiKey) {
     }
   }
 
-  // Process daily forecast (next 3 days)
+  // Process daily forecast (next 3 days) - use PST dates
   const dailyMap = {};
   for (const item of data.list) {
     const itemTime = new Date(item.dt * 1000);
-    const dayKey = itemTime.toISOString().split('T')[0]; // YYYY-MM-DD
+    // Convert to PST and get the date key
+    const itemTimePST = new Date(itemTime.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' }));
+    const dayKey = itemTimePST.toISOString().split('T')[0]; // YYYY-MM-DD
 
     if (!dailyMap[dayKey]) {
       dailyMap[dayKey] = {
@@ -90,13 +98,10 @@ export async function getWeather(location, apiKey) {
     dailyMap[dayKey].conditions.add(item.weather[0].main);
   }
 
-  // Convert to array, filter out today, take next 3 days
- const today = now.toISOString().split('T')[0];
- const dailyDates = Object.keys(dailyMap).sort();
-// console.log('Today:', today);
-// console.log('Daily dates:', dailyDates);
- const futureDates = dailyDates.filter(date => date > today);
-// console.log('Future dates:', futureDates);
+  // Convert to array, filter out today (in PST), take next 3 days
+  const todayPST = pstNow.toISOString().split('T')[0];
+  const dailyDates = Object.keys(dailyMap).sort();
+  const futureDates = dailyDates.filter(date => date > todayPST);
 
   for (let i = 0; i < Math.min(3, futureDates.length); i++) {
     const day = dailyMap[futureDates[i]];
