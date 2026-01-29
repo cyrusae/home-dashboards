@@ -16,11 +16,13 @@ Your current CalDAV implementation in `src/api/calendar.js` is actually quite cl
 #### 1. **API Layer** (`src/api/calendar.js`) - **Medium Effort**
 
 You'll need to:
+
 - Add a separate function `getCalendarTasks()` that queries for VTODO instead of VEVENT
 - Modify your REPORT query to filter for VTODO components
 - Add a VTODO parser (similar to your existing `parseICalEvent()`)
 
 The key difference in the query:
+
 ```xml
 <!-- Current (events) -->
 <c:comp-filter name="VEVENT">
@@ -36,6 +38,7 @@ The key difference in the query:
 #### 2. **Data Model** - **Small Effort**
 
 Tasks have slightly different properties:
+
 ```javascript
 // Event
 {
@@ -64,6 +67,7 @@ You'll need to:
 - Use different templates for tasks vs events
 
 The existing template system makes this straightforward:
+
 ```html
 <!-- Add to morning.html -->
 <template id="taskItemTemplate">
@@ -79,6 +83,7 @@ The existing template system makes this straightforward:
 #### 4. **Styling** - **Small Effort**
 
 Add task-specific styles to `src/dashboards/morning/morning.css`:
+
 ```css
 .task-item {
   /* Similar to .event-item but with checkbox styling */
@@ -98,6 +103,7 @@ Add task-specific styles to `src/dashboards/morning/morning.css`:
 ## Proposed Implementation Path
 
 ### Phase 1: Basic VTODO Support (Highest Priority)
+
 **Goal**: Show "today" tasks alongside events in the calendar card
 
 1. Add `getCalendarTasks()` to `src/api/calendar.js`
@@ -110,6 +116,7 @@ Add task-specific styles to `src/dashboards/morning/morning.css`:
 **Estimated effort**: 2-3 hours
 
 ### Phase 2: Task List Filtering (Lower Priority)
+
 **Goal**: Support separate task lists for routines vs one-offs
 
 1. Add list/calendar filtering in the query
