@@ -8,6 +8,10 @@
   background: #000000;
 }
 
+body {
+ padding: 0px;
+}
+
 .night-container {
   display: grid;
   grid-template-columns: minmax(15vw, 25vw) 1fr;
