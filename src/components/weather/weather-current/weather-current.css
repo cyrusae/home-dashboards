@@ -8,17 +8,39 @@
   align-items: flex-start;
   padding: 20px;
   border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.weather-left::before {
+  content: attr(data-icon);
+  position: absolute;
+  font-size: clamp(200px, 25vw, 350px);
+  opacity: 0.15;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+  font-family: '0xProto Nerd Font', monospace;
+  color: var(--accent-sky);
+}
+
+.weather-left > * {
+  position: relative;
+  z-index: 1;
 }
 
 .current-temp {
-  font-size: var(--size-large);
+  font-size: var(--size-bigger);
   font-weight: bold;
   color: var(--text-primary);
   line-height: var(--line-height-tight);
 }
 
 .current-condition {
-  font-size: var(--size-body);
+  font-size: var(--size-heading);
   color: var(--text-secondary);
   margin-top: 10px;
 }
