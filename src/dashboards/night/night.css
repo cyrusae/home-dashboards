@@ -31,7 +31,7 @@
   font-size: var(--size-massive);
   font-weight: bold;
   font-family: var(--font-family);
-  color: #3d0000;
+  color: #130000;
   line-height: 1;
   letter-spacing: 0.05em;
   transform: rotate(270deg);
@@ -50,9 +50,9 @@
 }
 
 .checklist-title {
-  font-size: var(--size-bigger);
+  font-size: var(--size-heading);
   font-weight: bold;
-  color: #4a0000;
+  color: #160000;
   font-family: var(--font-family);
   margin-bottom: 2vh;
   letter-spacing: 0.02em;
@@ -65,8 +65,8 @@
 }
 
 .checklist-item {
-  font-size: var(--size-bigger);
-  color: #3d0000;
+  font-size: var(--size-heading);
+  color: #130000;
   font-family: var(--font-family);
   line-height: 1.6;
   letter-spacing: 0.01em;
