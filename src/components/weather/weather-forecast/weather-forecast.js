@@ -1,6 +1,7 @@
 /**
  * Weather Forecast Component
  * Displays hourly weather forecast table for today
+ * Enhanced with network resilience
  */
 
 import { DashboardComponent } from '../../base.js';
@@ -10,6 +11,8 @@ import styles from './weather-forecast.css?raw';
 class WeatherForecast extends DashboardComponent {
   constructor() {
     super();
+    this.updateInterval = null;
+    this.lastSuccessfulData = null;
   }
 
   connectedCallback() {
@@ -21,62 +24,109 @@ class WeatherForecast extends DashboardComponent {
   disconnectedCallback() {
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
+      this.updateInterval = null;
     }
   }
 
   async fetchForecast() {
     try {
-      const response = await fetch(`/api/weather?location=${encodeURIComponent(window.configManager.get('openWeatherMapLocation'))}`);
-      if (!response.ok) throw new Error('Weather API error');
-
+      const location = window.configManager?.get('openWeatherMapLocation') || 'Seattle,US';
+      const url = `/api/weather?location=${encodeURIComponent(location)}`;
+      
+      const response = await this.fetchWithRetry(url);
       const data = await response.json();
+      
+      // Cache successful data
+      this.lastSuccessfulData = data.hourly;
+      
       this.updateForecast(data.hourly);
+      
     } catch (error) {
       console.error('Forecast error:', error);
-      this.showError(error.message);
+      
+      // Try cached data
+      if (this.lastSuccessfulData) {
+        console.log('Using cached forecast data');
+        this.updateForecast(this.lastSuccessfulData, true);
+      } else {
+        this.showError(`Forecast unavailable: ${error.message}`);
+      }
     }
   }
 
-  updateForecast(hourly) {
+  updateForecast(hourly, isStale = false) {
     const tbody = this.query('#forecastBody');
+    
+    if (!tbody) {
+      console.error('Forecast table body not found');
+      return;
+    }
     
     if (!hourly || hourly.length === 0) {
       tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-light); font-style: italic;">No forecast available</td></tr>';
       return;
     }
 
-    // Clear tbody
-    tbody.innerHTML = '';
+    try {
+      // Clear tbody
+      tbody.innerHTML = '';
 
-    // Clone and populate template for each hour
-    hourly.forEach(item => {
-      const row = this.createForecastRow(item);
-      tbody.appendChild(row);
-    });
+      // Clone and populate template for each hour
+      hourly.forEach(item => {
+        const row = this.createForecastRow(item);
+        if (row) {
+          tbody.appendChild(row);
+        }
+      });
+      
+      // Show stale warning if applicable
+      if (isStale) {
+        this.showTransientError('Using cached forecast (connection issue)');
+      }
+      
+    } catch (error) {
+      console.error('Error updating forecast display:', error);
+    }
   }
 
   createForecastRow(item) {
-    const template = this.query('#forecastRowTemplate');
-    const row = template.content.cloneNode(true);
+    try {
+      const template = this.query('#forecastRowTemplate');
+      if (!template) {
+        console.error('Forecast row template not found');
+        return null;
+      }
+      
+      const row = template.content.cloneNode(true);
 
-    // Format time
-    const time = new Date(item.time).toLocaleString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-    });
+      // Format time
+      const time = new Date(item.time).toLocaleString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      });
 
-    // Get weather icon
-    const icon = this.getWeatherIcon(item.condition);
+      // Get weather icon
+      const icon = this.getWeatherIcon(item.condition);
 
-    // Populate data
-    row.querySelector('[data-time]').textContent = time;
-    row.querySelector('[data-temp]').textContent = `${item.temp}°`;
-    row.querySelector('[data-icon]').textContent = icon;
-    row.querySelector('[data-precip]').textContent = `${item.precipProbability}%`;
-    row.querySelector('[data-pressure]').textContent = item.pressureMb;
+      // Populate data (null-safe)
+      const timeEl = row.querySelector('[data-time]');
+      const tempEl = row.querySelector('[data-temp]');
+      const iconEl = row.querySelector('[data-icon]');
+      const precipEl = row.querySelector('[data-precip]');
+      const pressureEl = row.querySelector('[data-pressure]');
+      
+      if (timeEl) timeEl.textContent = time;
+      if (tempEl) tempEl.textContent = `${item.temp}°`;
+      if (iconEl) iconEl.textContent = icon;
+      if (precipEl) precipEl.textContent = `${item.precipProbability}%`;
+      if (pressureEl) pressureEl.textContent = item.pressureMb;
 
-    return row;
+      return row;
+    } catch (error) {
+      console.error('Error creating forecast row:', error);
+      return null;
+    }
   }
 
   getWeatherIcon(condition) {
